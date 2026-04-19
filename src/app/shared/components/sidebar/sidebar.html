@@ -1,6 +1,9 @@
-<aside class="sidebar" [class.collapsed]="collapsed">
-  <div class="sidebar-header">
-    <div class="logo">
+<!-- Sidebar usando el componente HlmSidebarImports de Spartan -->
+<div hlm-sidebar class="sidebar-container" [class.collapsed]="collapsed">
+  
+  <!-- Sidebar Header -->
+  <div hlm-sidebar-header class="sidebar-header">
+    <div hlm-sidebar-brand class="logo-area">
       <div class="logo-icon">
         <i class="fas fa-leaf"></i>
       </div>
@@ -9,78 +12,111 @@
         <p>WELLNESS PLATFORM</p>
       </div>
     </div>
-    <button class="toggle-btn" (click)="toggleSidebar()">
+    <button hlm-sidebar-trigger hlmBtn variant="ghost" size="sm" class="toggle-btn" (click)="toggleSidebar()">
       <i [class]="collapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'"></i>
     </button>
   </div>
 
-  <div class="user-profile" *ngIf="!collapsed">
-    <div class="user-avatar">
-      <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
-      <div class="user-status"></div>
+  <!-- User Profile Section -->
+  <div hlm-sidebar-content class="sidebar-content">
+    
+    <!-- Perfil de usuario expandido -->
+    <div class="user-profile" *ngIf="!collapsed">
+      <div class="user-avatar">
+        <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
+        <div class="user-status"></div>
+      </div>
+      <div class="user-info">
+        <h4>Administrador</h4>
+        <p>admin@nutre.com</p>
+      </div>
     </div>
-    <div class="user-info-sidebar">
-      <h4>Administrador</h4>
-      <p>admin@nutre.com</p>
+    
+    <!-- Avatar colapsado -->
+    <div class="user-profile-collapsed" *ngIf="collapsed">
+      <div class="user-avatar">
+        <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
+        <div class="user-status"></div>
+      </div>
     </div>
-  </div>
-  
-  <div class="user-profile-collapsed" *ngIf="collapsed">
-    <div class="user-avatar">
-      <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
-      <div class="user-status"></div>
-    </div>
-  </div>
 
-  <nav class="sidebar-nav">
-    <div class="nav-section" *ngIf="!collapsed">Principal</div>
-    
-    <!-- Dashboard link con router -->
-    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link" (click)="setView('overview')">
-      <i class="fas fa-chart-pie"></i>
-      <span *ngIf="!collapsed">Resumen</span>
-    </a>
-    
-    <!-- Otros links con event handler -->
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'clients')">
-      <i class="fas fa-users"></i>
-      <span *ngIf="!collapsed">Clientes</span>
-    </a>
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'nutrition')">
-      <i class="fas fa-calendar-alt"></i>
-      <span *ngIf="!collapsed">Planes Nutricionales</span>
-    </a>
-    
-    <div class="nav-section" *ngIf="!collapsed">Gestión</div>
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'recipes')">
-      <i class="fas fa-utensils"></i>
-      <span *ngIf="!collapsed">Recetas</span>
-    </a>
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'appointments')">
-      <i class="fas fa-calendar-check"></i>
-      <span *ngIf="!collapsed">Citas</span>
-      <span class="badge" *ngIf="!collapsed">8</span>
-    </a>
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'payments')">
-      <i class="fas fa-credit-card"></i>
-      <span *ngIf="!collapsed">Pagos</span>
-    </a>
-    
-    <div class="nav-section" *ngIf="!collapsed">Analytics</div>
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'reports')">
-      <i class="fas fa-chart-line"></i>
-      <span *ngIf="!collapsed">Reportes</span>
-    </a>
-    <a href="#" class="nav-link" (click)="onNavClick($event, 'settings')">
-      <i class="fas fa-cog"></i>
-      <span *ngIf="!collapsed">Configuración</span>
-    </a>
-  </nav>
+    <hlm-separator />
 
-  <div class="sidebar-footer">
-    <a href="#" class="nav-link logout-btn" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i>
-      <span *ngIf="!collapsed">Cerrar Sesión</span>
-    </a>
+    <!-- Navegación principal -->
+    <nav hlm-sidebar-nav class="sidebar-nav">
+      <div class="nav-section" *ngIf="!collapsed">Principal</div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-content" (click)="setView('overview')">
+          <i class="fas fa-chart-pie"></i>
+          <span *ngIf="!collapsed">Dashboard</span>
+        </a>
+      </div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'clients')">
+          <i class="fas fa-users"></i>
+          <span *ngIf="!collapsed">Clientes</span>
+        </a>
+      </div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'nutrition')">
+          <i class="fas fa-calendar-alt"></i>
+          <span *ngIf="!collapsed">Planes Nutricionales</span>
+        </a>
+      </div>
+      
+      <div class="nav-section" *ngIf="!collapsed">Gestión</div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'recipes')">
+          <i class="fas fa-utensils"></i>
+          <span *ngIf="!collapsed">Recetas</span>
+        </a>
+      </div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'appointments')">
+          <i class="fas fa-calendar-check"></i>
+          <span *ngIf="!collapsed">Citas</span>
+          <span class="badge" *ngIf="!collapsed">8</span>
+        </a>
+      </div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'payments')">
+          <i class="fas fa-credit-card"></i>
+          <span *ngIf="!collapsed">Pagos</span>
+        </a>
+      </div>
+      
+      <div class="nav-section" *ngIf="!collapsed">Analytics</div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'reports')">
+          <i class="fas fa-chart-line"></i>
+          <span *ngIf="!collapsed">Reportes</span>
+        </a>
+      </div>
+      
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'settings')">
+          <i class="fas fa-cog"></i>
+          <span *ngIf="!collapsed">Configuración</span>
+        </a>
+      </div>
+    </nav>
+
+    <hlm-separator />
+
+    <!-- Footer con logout -->
+    <div hlm-sidebar-footer class="sidebar-footer">
+      <button hlmBtn variant="destructive" class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="!collapsed">Cerrar Sesión</span>
+      </button>
+    </div>
+    
   </div>
-</aside>
+</div>

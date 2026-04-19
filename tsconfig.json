@@ -19,7 +19,11 @@
       "spartan/checkbox": ["./libs/ui/checkbox/src/index.ts"],
       "spartan/icon": ["./libs/ui/icon/src/index.ts"],
       "spartan/separator": ["./libs/ui/separator/src/index.ts"],
-      "spartan/button": ["./libs/ui/button/src/index.ts"]
+      "spartan/button": ["./libs/ui/button/src/index.ts"],
+      "spartan/sidebar": ["./libs/ui/sidebar/src/index.ts"],
+      "spartan/sheet": ["./libs/ui/sheet/src/index.ts"],
+      "spartan/skeleton": ["./libs/ui/skeleton/src/index.ts"],
+      "spartan/tooltip": ["./libs/ui/tooltip/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
