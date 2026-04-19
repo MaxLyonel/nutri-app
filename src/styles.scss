@@ -1,89 +1,164 @@
-@layer theme, base, components, utilities;
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/preflight.css' layer(base);
-@import 'tailwindcss/utilities.css';
-
-@import '@angular/cdk/overlay-prebuilt.css';
-
-/* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Estios globales */
-body {
-  margin: 0;
-  padding: 0;
-}
+/* Importar fuente Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
 
 :root {
-  color-scheme: light;
-
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-
-  --background: 0deg 0% 100%;
-  --foreground: 0deg 0.02% 3.94%;
-  --card: 0deg 0% 100%;
-  --card-foreground: 0deg 0.02% 3.94%;
-  --popover: 0deg 0% 100%;
-  --popover-foreground: 0deg 0.02% 3.94%;
-  --primary: 0deg 0.02% 9.06%;
-  --primary-foreground: 0deg 0.5% 98.03%;
-  --secondary: 0deg 0.24% 96.06%;
-  --secondary-foreground: 0deg 0.02% 9.06%;
-  --muted: 0deg 0.24% 96.06%;
-  --muted-foreground: 0deg 0.01% 45.16%;
-  --accent: 0deg 0.24% 96.06%;
-  --accent-foreground: 0deg 0.02% 9.06%;
-  --destructive: 351.72deg 100% 40.53%;
-  --border: 0deg 0.09% 89.82%;
-  --input: 0deg 0.09% 89.82%;
-  --ring: 0deg 0.02% 63.02%;
-  --radius: 0.625rem;
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 0 0% 4%;
-  --sidebar-accent: 0 0% 96%;
-  --sidebar-accent-foreground: 0 0% 9%;
-  --sidebar-border: 0 0% 90%;
-  --sidebar-ring: 0 0% 63%;
+  /* Colores principales - EXACTOS del login original */
+  --background: 0 0% 4%;        /* #0A0C10 */
+  --foreground: 160 20% 96%;     /* #EFF3F8 */
+  
+  --card: 0 0% 4%;
+  --card-foreground: 160 20% 96%;
+  
+  --primary: 160 100% 45%;       /* #00E6A0 */
+  --primary-foreground: 0 0% 4%;
+  
+  --secondary: 195 100% 45%;     /* #00B4D8 */
+  --secondary-foreground: 0 0% 4%;
+  
+  --muted: 220 15% 12%;
+  --muted-foreground: 220 10% 60%;
+  
+  --accent: 160 100% 45%;
+  --accent-foreground: 0 0% 4%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --border: 160 100% 45% / 0.2;
+  --input: 160 100% 45% / 0.3;
+  --ring: 160 100% 45%;
+  
+  --radius: 0.75rem;
 }
 
-:root.dark {
-  color-scheme: dark;
-
-  --background: 0deg 0.02% 3.94%;
-  --foreground: 0deg 0.5% 98.03%;
-  --card: 0deg 0.02% 9.06%;
-  --card-foreground: 0deg 0.5% 98.03%;
-  --popover: 0deg 0.02% 9.06%;
-  --popover-foreground: 0deg 0.5% 98.03%;
-  --primary: 0deg 0.09% 89.82%;
-  --primary-foreground: 0deg 0.02% 9.06%;
-  --secondary: 0deg 0.01% 14.94%;
-  --secondary-foreground: 0deg 0.5% 98.03%;
-  --muted: 0deg 0.01% 14.94%;
-  --muted-foreground: 0deg 0.02% 63.02%;
-  --accent: 0deg 0% 14.9%;
-  --accent-foreground: 0deg 0.5% 98.03%;
-  --destructive: 358.76deg 100% 69.84%;
-  --border: 0deg 0% 13.73%;
-  --input: 0deg 0% 18.43%;
-  --ring: 0deg 0.01% 45.16%;
-  --sidebar: 0 0% 9%;
-  --sidebar-foreground: 0 0% 98%;
-  --sidebar-accent: 0 0% 15%;
-  --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-border: 0 0% 100% / 0.1;
-  --sidebar-ring: 0 0% 32%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0A0C10;
+  color: #EFF3F8;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Fondo con efectos de grid y gradiente sutil */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 255, 170, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 170, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: -20%;
+  right: -10%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle at 70% 30%, rgba(0, 230, 160, 0.08), transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Estilos para inputs - estilo login original */
+input, .hlm-input {
+  background: rgba(12, 16, 22, 0.8) !important;
+  border: 1px solid rgba(76, 255, 176, 0.3) !important;
+  border-radius: 1.5rem !important;
+  padding: 1rem 1rem 1rem 3rem !important;
+  font-size: 1rem !important;
+  font-family: 'Inter', sans-serif !important;
+  color: #EFF3F8 !important;
+  outline: none !important;
+  transition: all 0.25s ease !important;
+  font-weight: 500 !important;
+  width: 100%;
+}
+
+input:focus, .hlm-input:focus {
+  border-color: #4cffb0 !important;
+  box-shadow: 0 0 0 3px rgba(76, 255, 176, 0.2) !important;
+  background: rgba(18, 24, 32, 0.95) !important;
+}
+
+input::placeholder, .hlm-input::placeholder {
+  color: #6e7e93 !important;
+  font-weight: 400 !important;
+}
+
+/* Estilos para botones - estilo login original */
+button[hlmBtn] {
+  transition: all 0.25s ease !important;
+  border-radius: 2rem !important;
+  font-weight: 600 !important;
+}
+
+button[hlmBtn]:hover {
+  transform: scale(1.02) !important;
+}
+
+button[hlmBtn]:active {
+  transform: scale(0.98) !important;
+}
+
+/* Efecto de glassmorphism para cards */
+.glass-card {
+  background: rgba(18, 22, 28, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 255, 170, 0.1);
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: 0 30px 55px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 170, 0.3);
+  transform: translateY(-3px);
+}
+
+/* Reset y responsividad global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
+  /* Si quieres ocultar el scrollbar pero mantener funcionalidad */
+  scrollbar-width: thin;
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
   body {
-    @apply bg-background text-foreground;
+    font-size: 14px;
   }
 }
+
+

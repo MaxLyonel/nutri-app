@@ -5,13 +5,14 @@ import { HlmInputImports } from 'spartan/input';
 import { HlmCardImports } from 'spartan/card';
 import { HlmCheckboxImports } from 'spartan/checkbox';
 import { HlmSeparatorImports } from 'spartan/separator';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     HlmButtonImports,
     HlmInputImports,
     HlmCardImports,

@@ -1,1 +1,80 @@
-<p>login works!</p>
+<div class="login-container">
+  <div class="w-full max-w-md px-4">
+    <div class="glass-card">
+      
+      <!-- Logo y SPARTAN lado a lado - CORREGIDO -->
+      <div class="header-container">
+        <div class="logo-wrapper">
+          <div class="logo-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h1 class="logo-text">NUTRE</h1>
+        </div>
+        <p class="brand-sub">Asesoramiento y catering</p>
+      </div>
+
+      <div class="welcome-title">Bienvenido de vuelta</div>
+      <div class="welcome-text">Accede a tu cuenta con tus credenciales</div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Email Input -->
+        <div class="input-group">
+          <i class="fas fa-envelope input-icon"></i>
+          <input 
+            type="email" 
+            formControlName="email"
+            placeholder="Correo electrónico"
+            class="input-field"
+          >
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+          <i class="fas fa-lock input-icon"></i>
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Contraseña"
+            class="input-field"
+          >
+          <i 
+            [class]="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"
+            (click)="togglePassword()"
+            class="password-toggle"
+          ></i>
+        </div>
+
+        <div class="options">
+          <label class="checkbox">
+            <input type="checkbox" class="checkbox-input"> 
+            <span>Recordarme</span>
+          </label>
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="login-btn">
+          <i class="fas fa-arrow-right-to-bracket"></i> Iniciar Sesión
+        </button>
+      </form>
+
+      <div class="separator">
+        <span>o accede con</span>
+      </div>
+
+      <div class="social-buttons">
+        <button class="social-btn">
+          <i class="fab fa-google"></i> Google
+        </button>
+        <button class="social-btn">
+          <i class="fab fa-github"></i> GitHub
+        </button>
+      </div>
+
+      <div class="signup-prompt">
+        ¿No tienes una cuenta?
+        <a href="#" class="signup-link">Crear cuenta</a>
+      </div>
+    </div>
+  </div>
+</div>

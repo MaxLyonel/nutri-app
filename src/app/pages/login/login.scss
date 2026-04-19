@@ -1,0 +1,310 @@
+/* Estilos específicos para el login - Versión holgada */
+.header-container {
+  text-align: center;
+  margin-bottom: 1.5rem;  /* Aumentado */
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;  /* Aumentado */
+  margin-bottom: 10px;  /* Aumentado */
+}
+
+.logo-icon {
+  background: linear-gradient(135deg, #00E6A0, #00B4D8);
+  width: 52px;  /* Aumentado */
+  height: 52px;  /* Aumentado */
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 230, 160, 0.2);
+}
+
+.logo-icon i {
+  font-size: 2rem;  /* Aumentado */
+  color: #0A0C10;
+}
+
+.logo-text {
+  background: linear-gradient(135deg, #FFFFFF, #A0F0E0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 2.1rem;  /* Aumentado */
+  font-weight: 700;
+  margin: 0;
+}
+
+.brand-sub {
+  font-size: 0.85rem;  /* Aumentado */
+  color: #9aa9bb;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.welcome-title {
+  font-size: 1.9rem;  /* Aumentado */
+  font-weight: 600;
+  margin-bottom: 0.6rem;  /* Aumentado */
+  background: linear-gradient(135deg, #F0F5FF, #B0F0E0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.welcome-text {
+  color: #9aaec7;
+  font-size: 0.95rem;  /* Aumentado */
+  margin-bottom: 1.8rem;  /* Aumentado */
+  font-weight: 400;
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+/* Glass card - más padding */
+.glass-card {
+  background: rgba(18, 22, 28, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 255, 170, 0.1);
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 2.2rem 2.2rem;  /* Aumentado */
+  width: 100%;
+  max-width: 500px;  /* Aumentado */
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.glass-card:hover {
+  box-shadow: 0 30px 55px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 170, 0.3);
+  transform: translateY(-3px);
+}
+
+/* Contenedor principal */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;  /* Aumentado */
+}
+
+/* Inputs con más espacio */
+.input-group {
+  margin-bottom: 1.3rem;  /* Aumentado */
+  position: relative;
+}
+
+.input-group:first-of-type {
+  margin-bottom: 1.5rem;  /* Aumentado */
+}
+
+.input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4cffb0;
+  font-size: 1.15rem;  /* Aumentado */
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.input-field {
+  width: 100%;
+  background: rgba(12, 16, 22, 0.8);
+  border: 1px solid rgba(76, 255, 176, 0.3);
+  border-radius: 1.5rem;
+  padding: 1rem 1rem 1rem 3rem;  /* Aumentado */
+  font-size: 1rem;  /* Aumentado */
+  font-family: 'Inter', sans-serif;
+  color: #EFF3F8;
+  outline: none;
+  transition: all 0.25s ease;
+  font-weight: 500;
+}
+
+.input-field:focus {
+  border-color: #4cffb0;
+  box-shadow: 0 0 0 3px rgba(76, 255, 176, 0.2);
+  background: rgba(18, 24, 32, 0.95);
+}
+
+.input-field::placeholder {
+  color: #6e7e93;
+  font-weight: 400;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #7c8fa8;
+  font-size: 1.05rem;  /* Aumentado */
+  z-index: 5;
+  transition: color 0.2s;
+}
+
+.password-toggle:hover {
+  color: #4cffb0;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0 1.3rem;  /* Aumentado */
+  font-size: 0.9rem;  /* Aumentado */
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #bfd0e5;
+}
+
+.checkbox-input {
+  width: 16px;
+  height: 16px;
+  accent-color: #00E6A0;
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: #4cffb0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+  font-size: 0.9rem;  /* Aumentado */
+  white-space: nowrap;
+}
+
+.forgot-link:hover {
+  color: #b0ffe0;
+  text-decoration: underline;
+}
+
+.login-btn {
+  width: 100%;
+  background: linear-gradient(95deg, #00E6A0, #00B4D8);
+  border: none;
+  border-radius: 2rem;
+  padding: 1rem;  /* Aumentado */
+  font-size: 1rem;  /* Aumentado */
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: #0A0C10;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 5px 15px rgba(0, 230, 160, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.login-btn:hover {
+  transform: scale(1.02);
+  background: linear-gradient(95deg, #0ff0b0, #20c8e8);
+  box-shadow: 0 8px 22px rgba(0, 230, 160, 0.35);
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.3rem 0;  /* Aumentado */
+  color: #6b7f99;
+  font-size: 0.85rem;  /* Aumentado */
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(76, 255, 176, 0.2);
+}
+
+.separator span {
+  margin: 0 12px;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 1.2rem;  /* Aumentado */
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.social-btn {
+  background: rgba(25, 32, 42, 0.9);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 230, 160, 0.25);
+  border-radius: 2rem;
+  padding: 0.7rem 1.3rem;  /* Aumentado */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;  /* Aumentado */
+  font-weight: 500;
+  color: #EFF3F8;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  flex: 1;
+  justify-content: center;
+  min-width: 130px;  /* Aumentado */
+}
+
+.social-btn i {
+  font-size: 1.15rem;  /* Aumentado */
+  color: #4cffb0;
+}
+
+.social-btn:hover {
+  background: rgba(40, 50, 65, 0.9);
+  border-color: #4cffb0;
+  transform: translateY(-2px);
+}
+
+.signup-prompt {
+  text-align: center;
+  margin-top: 1.3rem;  /* Aumentado */
+  font-size: 0.9rem;  /* Aumentado */
+  color: #9aaec7;
+  width: 100%;
+  overflow: visible;
+}
+
+.signup-link {
+  color: #4cffb0;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.signup-link:hover {
+  color: #b0ffe0;
+  text-decoration: underline;
+}
+
+/* Forzar reducción de espacio entre títulos */
+.welcome-title + .welcome-text {
+  margin-top: -0.5rem;  /* Reduce el espacio vertical */
+}
