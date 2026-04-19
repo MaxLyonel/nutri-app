@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { HlmButtonImports } from 'spartan/button';
 import { HlmInputImports } from 'spartan/input';
 import { HlmCardImports } from 'spartan/card';
 import { HlmCheckboxImports } from 'spartan/checkbox';
 import { HlmSeparatorImports } from 'spartan/separator';
+import { HlmAlertImports } from 'spartan/alert';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgIcon } from '@ng-icons/core';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +21,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     HlmInputImports,
     HlmCardImports,
     HlmCheckboxImports,
-    HlmSeparatorImports
+    HlmSeparatorImports,
+    HlmAlertImports,
+    NgIcon,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -25,12 +31,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class Login {
   loginForm: FormGroup;
   showPassword: boolean = false;
+  showError: boolean = false;
+  errorMessage: string = '';
+
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-    })
+    });
   }
 
   togglePassword() {
@@ -40,7 +51,21 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      console.log('Login data:', { email, password });
+      this.showError = false;
+
+      this.authService.login({ email, password }).subscribe({
+        next: (response) => {
+          localStorage.setItem('token', response.token);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (err) => {
+          const backendError = err.error;
+          this.errorMessage = backendError?.message
+            ? `${backendError.message}${backendError.error ? ' - ' + backendError.error : ''}`
+            : 'Credenciales inválidas';
+          this.showError = true;
+        },
+      });
     }
   }
 }

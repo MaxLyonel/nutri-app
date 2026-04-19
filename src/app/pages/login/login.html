@@ -1,7 +1,6 @@
 <div class="login-container">
   <div class="w-full max-w-md px-4">
     <div class="glass-card">
-      
       <!-- Logo y SPARTAN lado a lado - CORREGIDO -->
       <div class="header-container">
         <div class="logo-wrapper">
@@ -17,28 +16,35 @@
       <div class="welcome-text">Accede a tu cuenta con tus credenciales</div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        
+        @if (showError) {
+          <hlm-alert variant="destructive" class="mb-4">
+            <ng-icon name="lucideCircleAlert" hlmAlertIcon />
+            <h4 hlmAlertTitle>Error de autenticación</h4>
+            <p hlmAlertDescription>{{ errorMessage }}</p>
+          </hlm-alert>
+        }
+
         <!-- Email Input -->
         <div class="input-group">
           <i class="fas fa-envelope input-icon"></i>
-          <input 
-            type="email" 
+          <input
+            type="email"
             formControlName="email"
             placeholder="Correo electrónico"
             class="input-field"
-          >
+          />
         </div>
 
         <!-- Password Input -->
         <div class="input-group">
           <i class="fas fa-lock input-icon"></i>
-          <input 
+          <input
             [type]="showPassword ? 'text' : 'password'"
             formControlName="password"
             placeholder="Contraseña"
             class="input-field"
-          >
-          <i 
+          />
+          <i
             [class]="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"
             (click)="togglePassword()"
             class="password-toggle"
@@ -47,7 +53,7 @@
 
         <div class="options">
           <label class="checkbox">
-            <input type="checkbox" class="checkbox-input"> 
+            <input type="checkbox" class="checkbox-input" />
             <span>Recordarme</span>
           </label>
           <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
@@ -63,12 +69,8 @@
       </div>
 
       <div class="social-buttons">
-        <button class="social-btn">
-          <i class="fab fa-google"></i> Google
-        </button>
-        <button class="social-btn">
-          <i class="fab fa-github"></i> GitHub
-        </button>
+        <button class="social-btn"><i class="fab fa-google"></i> Google</button>
+        <button class="social-btn"><i class="fab fa-github"></i> GitHub</button>
       </div>
 
       <div class="signup-prompt">
