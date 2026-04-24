@@ -60,34 +60,29 @@
         <table class="data-table">
           <thead>
             <tr>
+               <th>carnet</th>
               <th>Nombre</th>
               <th>Teléfono</th>
-              <th>Email</th>
-              <th>Licencia</th>
-              <th>Vehículo</th>
-              <th>Estado</th>
+
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let dealer of dealers">
-              <td>{{ dealer.nombre }}</td>
-              <td>{{ dealer.telefono }}</td>
-              <td>{{ dealer.email }}</td>
-              <td>{{ dealer.licencia }}</td>
-              <td>{{ dealer.vehiculo }}</td>
-              <td>
-                <span class="status-badge" [class.active]="dealer.estado === 'activo'" [class.inactive]="dealer.estado === 'inactivo'">
-                  {{ dealer.estado | titlecase }}
-                </span>
-              </td>
-              <td class="actions-cell">
-                <button class="action-btn" (click)="openEditDealerDialog(dealer)">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn danger" (click)="deleteDealer(dealer.id)">
-                  <i class="fas fa-trash"></i>
-                </button>
+
+              <td>{{ dealer.identityCard }}</td>
+              <td>{{ dealer.fullName }}</td>
+
+              <td>{{ dealer.cellPhone }}</td>
+
+
+
+            </tr>
+
+            <!-- 🔹 si no hay datos -->
+            <tr *ngIf="dealers.length === 0">
+              <td colspan="3" style="text-align:center;">
+                No hay repartidores
               </td>
             </tr>
           </tbody>

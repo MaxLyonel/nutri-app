@@ -1,10 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Sidebar } from '../../../shared/components/sidebar/sidebar';
-import { DeliveryService, Dealer } from '../delivery.service';
+import { DeliveryService, Dealer, CreateDealerDto } from '../../../shared/services/delivery.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { HlmButtonImports } from 'spartan/button';
 
@@ -24,12 +24,16 @@ export class DealerPage implements OnInit {
   private deliveryService = inject(DeliveryService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
 
-  dealers: Dealer[] = [];
+  dealers: any[] = [];
   dropdownOpen = false;
 
   showDealerDialog = false;
   editingDealer: Dealer | null = null;
+
+  loading = false;
+  errorMessage = '';
 
   newDealer: Partial<Dealer> = {
     nombre: '',
@@ -41,11 +45,25 @@ export class DealerPage implements OnInit {
   };
 
   ngOnInit(): void {
-    this.loadDealers();
+     this.loadDealers();
   }
 
+  // 🔹 GET DEALERS
   loadDealers(): void {
-    this.dealers = this.deliveryService.getDealers();
+    this.loading = true;
+    this.deliveryService.getDealers().subscribe({
+      next: (data) => {
+        this.dealers = data.dealers;
+        console.log('DEALERS', this.dealers);
+        this.loading = false;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Error al cargar dealers';
+        this.loading = false;
+      }
+    });
   }
 
   onViewChange(view: string): void {
@@ -58,9 +76,17 @@ export class DealerPage implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
+  // 🔹 MODAL
   openNewDealerDialog(): void {
     this.editingDealer = null;
-    this.newDealer = { nombre: '', telefono: '', email: '', licencia: '', vehiculo: '', estado: 'activo' };
+    this.newDealer = {
+      nombre: '',
+      telefono: '',
+      email: '',
+      licencia: '',
+      vehiculo: '',
+      estado: 'activo'
+    };
     this.showDealerDialog = true;
   }
 
@@ -75,29 +101,63 @@ export class DealerPage implements OnInit {
     this.editingDealer = null;
   }
 
+  // 🔹 CREATE / UPDATE
   saveDealer(): void {
+    this.loading = true;
+
     if (this.editingDealer) {
-      this.deliveryService.updateDealer(this.editingDealer.id, this.newDealer);
+      this.deliveryService.updateDealer(this.editingDealer.id, this.newDealer)
+        .subscribe({
+          next: () => {
+            this.loadDealers();
+            this.closeDealerDialog();
+          },
+          error: (err) => {
+            console.error(err);
+            this.errorMessage = 'Error al actualizar dealer';
+            this.loading = false;
+          }
+        });
+
     } else {
-      this.deliveryService.createDealer(this.newDealer as Omit<Dealer, 'id'>);
+      this.deliveryService.createDealer(this.newDealer as Omit<Dealer, 'id'>)
+        .subscribe({
+          next: () => {
+            this.loadDealers();
+            this.closeDealerDialog();
+          },
+          error: (err) => {
+            console.error(err);
+            this.errorMessage = 'Error al crear dealer';
+            this.loading = false;
+          }
+        });
     }
-    this.loadDealers();
-    this.closeDealerDialog();
   }
 
+  // 🔹 DELETE
   deleteDealer(id: number): void {
-    this.deliveryService.deleteDealer(id);
-    this.loadDealers();
+    if (!confirm('¿Seguro que deseas eliminar este dealer?')) return;
+
+    this.loading = true;
+
+    this.deliveryService.deleteDealer(id).subscribe({
+      next: () => {
+        this.loadDealers();
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Error al eliminar dealer';
+        this.loading = false;
+      }
+    });
   }
 
+  // 🔹 LOGOUT
   logout(): void {
     this.authService.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        this.router.navigate(['/login']);
-      },
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login']),
     });
   }
 }
