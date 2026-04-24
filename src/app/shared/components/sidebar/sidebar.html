@@ -1,6 +1,5 @@
 <!-- Sidebar usando el componente HlmSidebarImports de Spartan -->
 <div hlm-sidebar class="sidebar-container" [class.collapsed]="collapsed">
-  
   <!-- Sidebar Header -->
   <div hlm-sidebar-header class="sidebar-header">
     <div hlm-sidebar-brand class="logo-area">
@@ -12,18 +11,27 @@
         <p>WELLNESS PLATFORM</p>
       </div>
     </div>
-    <button hlm-sidebar-trigger hlmBtn variant="ghost" size="sm" class="toggle-btn" (click)="toggleSidebar()">
+    <button
+      hlm-sidebar-trigger
+      hlmBtn
+      variant="ghost"
+      size="sm"
+      class="toggle-btn"
+      (click)="toggleSidebar()"
+    >
       <i [class]="collapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'"></i>
     </button>
   </div>
 
   <!-- User Profile Section -->
   <div hlm-sidebar-content class="sidebar-content">
-    
     <!-- Perfil de usuario expandido -->
     <div class="user-profile" *ngIf="!collapsed">
       <div class="user-avatar">
-        <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
+        <img
+          src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true"
+          alt="Avatar"
+        />
         <div class="user-status"></div>
       </div>
       <div class="user-info">
@@ -31,11 +39,14 @@
         <p>admin@nutre.com</p>
       </div>
     </div>
-    
+
     <!-- Avatar colapsado -->
     <div class="user-profile-collapsed" *ngIf="collapsed">
       <div class="user-avatar">
-        <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
+        <img
+          src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true"
+          alt="Avatar"
+        />
         <div class="user-status"></div>
       </div>
     </div>
@@ -45,37 +56,43 @@
     <!-- Navegación principal -->
     <nav hlm-sidebar-nav class="sidebar-nav">
       <div class="nav-section" *ngIf="!collapsed">Principal</div>
-      
+
       <div hlm-sidebar-item class="nav-link">
-        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-content" (click)="setView('overview')">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link-content"
+          (click)="setView('overview')"
+        >
           <i class="fas fa-chart-pie"></i>
           <span *ngIf="!collapsed">Dashboard</span>
         </a>
       </div>
-      
+
       <div hlm-sidebar-item class="nav-link">
         <a routerLink="/clients" routerLinkActive="active" class="nav-link-content" (click)="onNavClick($event, 'clients')">
           <i class="fas fa-users"></i>
           <span *ngIf="!collapsed">Clientes</span>
         </a>
       </div>
-      
+
       <div hlm-sidebar-item class="nav-link">
-        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'nutrition')">
+        <a routerLink="/planes" routerLinkActive="active" class="nav-link-content" (click)="onNavClick($event, 'nutrition')">
           <i class="fas fa-calendar-alt"></i>
           <span *ngIf="!collapsed">Planes Nutricionales</span>
         </a>
       </div>
-      
+
       <div class="nav-section" *ngIf="!collapsed">Gestión</div>
-      
+
       <div hlm-sidebar-item class="nav-link">
         <a href="#" class="nav-link-content" (click)="onNavClick($event, 'recipes')">
           <i class="fas fa-utensils"></i>
           <span *ngIf="!collapsed">Recetas</span>
         </a>
       </div>
-      
+
       <div hlm-sidebar-item class="nav-link">
         <a href="#" class="nav-link-content" (click)="onNavClick($event, 'appointments')">
           <i class="fas fa-calendar-check"></i>
@@ -83,23 +100,61 @@
           <span class="badge" *ngIf="!collapsed">8</span>
         </a>
       </div>
-      
+
       <div hlm-sidebar-item class="nav-link">
         <a href="#" class="nav-link-content" (click)="onNavClick($event, 'payments')">
           <i class="fas fa-credit-card"></i>
           <span *ngIf="!collapsed">Pagos</span>
         </a>
       </div>
-      
+
+      <div class="nav-section" *ngIf="!collapsed">Producción</div>
+
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'payments')">
+          <i class="fas fa-credit-card"></i>
+          <span *ngIf="!collapsed">Órdenes de Producción</span>
+        </a>
+      </div>
+
+      <div class="nav-section" *ngIf="!collapsed">Logística</div>
+
+      <div hlm-sidebar-item class="nav-link">
+        <a routerLink="/delivery/dealer" routerLinkActive="active" class="nav-link-content">
+          <i class="fas fa-user"></i>
+          <span *ngIf="!collapsed">Repartidores</span>
+        </a>
+      </div>
+
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'deliveries')">
+          <i class="fas fa-box"></i>
+          <span *ngIf="!collapsed">Entregas</span>
+        </a>
+      </div>
+
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'routes')">
+          <i class="fas fa-route"></i>
+          <span *ngIf="!collapsed">Rutas</span>
+        </a>
+      </div>
+
+      <div hlm-sidebar-item class="nav-link">
+        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'delivery-detail')">
+          <i class="fas fa-map-marker-alt"></i>
+          <span *ngIf="!collapsed">Detalle de Entrega</span>
+        </a>
+      </div>
       <div class="nav-section" *ngIf="!collapsed">Analytics</div>
-      
+
       <div hlm-sidebar-item class="nav-link">
         <a href="#" class="nav-link-content" (click)="onNavClick($event, 'reports')">
           <i class="fas fa-chart-line"></i>
           <span *ngIf="!collapsed">Reportes</span>
         </a>
       </div>
-      
+
       <div hlm-sidebar-item class="nav-link">
         <a href="#" class="nav-link-content" (click)="onNavClick($event, 'settings')">
           <i class="fas fa-cog"></i>
@@ -117,6 +172,5 @@
         <span *ngIf="!collapsed">Cerrar Sesión</span>
       </button>
     </div>
-    
   </div>
 </div>

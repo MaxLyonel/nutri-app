@@ -1,0 +1,490 @@
+.plan-creator {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+// Cabecera del plan
+.plan-header {
+  margin-bottom: 2rem;
+  background: rgba(18, 22, 28, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 170, 0.1);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.plan-header-content {
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  .form-group {
+    flex: 1;
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #9aaec7;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input {
+      font-size: 0.9rem;
+      padding: 0.7rem 1rem;
+      border-radius: 0.75rem;
+    }
+  }
+}
+
+// Contenido principal
+.main-content {
+  display: flex;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  align-items: flex-start;
+
+  // Cuando el panel está abierto: calendario 60%, panel 40%
+  &.panel-open {
+    .calendar-wrapper {
+      width: 60%;
+      flex: none;
+    }
+
+    .assignment-panel {
+      width: 40%;
+      flex: none;
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+  }
+}
+
+// Calendario
+.calendar-wrapper {
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  background: rgba(18, 22, 28, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 170, 0.1);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+// HEADER DEL CALENDARIO
+// .calendar-header {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   margin-bottom: 1.5rem;
+//   width: 100%;
+
+//   button {
+//     width: 36px;
+//     height: 36px;
+//     padding: 0 !important;
+//     font-size: 1.2rem;
+//     border-radius: 0.75rem !important;
+//     background: rgba(0, 255, 170, 0.1);
+//     border: 1px solid rgba(0, 255, 170, 0.2);
+//     flex-shrink: 0;
+//     cursor: pointer;
+//     transition: all 0.2s;
+
+//     &:hover {
+//       background: rgba(0, 255, 170, 0.2);
+//     }
+//   }
+
+//   h2 {
+//     font-size: 1.3rem;
+//     font-weight: 600;
+//     margin: 0;
+//     text-align: center;
+//     flex: 1;
+//     text-transform: capitalize;
+//     color: #eff3f8;
+//   }
+// }
+// HEADER DEL CALENDARIO - Botones a los lados y título centrado
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  
+  button {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    font-size: 1.2rem;
+    border-radius: 0.75rem !important;
+    background: rgba(0, 255, 170, 0.1);
+    border: 1px solid rgba(0, 255, 170, 0.2);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(0, 255, 170, 0.2);
+    }
+    
+    &:first-child {
+      left: 0;
+    }
+    
+    &:last-child {
+      right: 0;
+    }
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+    text-transform: capitalize;
+    color: #eff3f8;
+  }
+}
+
+// Grid calendario
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  padding: 0.6rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9aaec7;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.6rem;
+}
+
+.calendar-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(0, 0, 0, 0.2);
+  position: relative;
+  border-radius: 0.75rem;
+
+  &:hover {
+    background: rgba(0, 255, 170, 0.15);
+    transform: scale(1.02);
+  }
+
+  &.other-month {
+    opacity: 0.3;
+  }
+
+  &.has-plan {
+    background: rgba(0, 230, 160, 0.15);
+    border: 1px solid rgba(0, 230, 160, 0.3);
+  }
+
+  &.selected {
+    background: linear-gradient(135deg, rgba(0, 230, 160, 0.25), rgba(0, 180, 216, 0.25));
+    border: 2px solid #00e6a0;
+    box-shadow: 0 0 15px rgba(0, 230, 160, 0.2);
+  }
+
+  .day-number {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .plan-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    font-size: 0.75rem;
+    color: #00e6a0;
+  }
+}
+
+// Panel lateral de asignación - entra desde la derecha
+.assignment-panel {
+  width: 0;
+  flex: none;
+  opacity: 0;
+  visibility: hidden;
+  background: rgba(18, 22, 28, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  border-radius: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(20px);
+  overflow: hidden;
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(0, 255, 170, 0.1);
+
+  h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+
+    i {
+      color: #00e6a0;
+      margin-right: 6px;
+    }
+  }
+}
+
+.close-panel {
+  color: #9aaec7;
+  width: 28px;
+  height: 28px;
+
+  &:hover {
+    color: #e74c3c;
+  }
+}
+
+.panel-body {
+  padding: 1rem;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 255, 170, 0.05);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 170, 0.3);
+    border-radius: 4px;
+  }
+}
+
+.selected-date {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #4cffb0;
+  margin-bottom: 0.8rem;
+  padding: 0.5rem;
+  border-radius: 0.6rem;
+  background: rgba(0, 255, 170, 0.05);
+  border-bottom: 1px solid rgba(0, 255, 170, 0.15);
+  text-align: center;
+
+  i {
+    margin-right: 4px;
+  }
+}
+
+.form-group {
+  margin-bottom: 0.8rem;
+
+  label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #9aaec7;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.6rem;
+    width: 100%;
+  }
+}
+
+// Botones ancho completo y centrados
+.add-time-btn {
+  width: 100%;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.5rem !important;
+  font-size: 0.75rem !important;
+  border-radius: 2rem !important;
+  border-style: dashed;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.recipe-selector {
+  position: relative;
+  width: 100%;
+
+  .recipe-selector-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.5rem 0.8rem !important;
+    font-size: 0.75rem !important;
+    border-radius: 2rem !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.add-plan-btn {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background: linear-gradient(95deg, #00e6a0, #00b4d8);
+  color: #0a0c10;
+  font-weight: 600;
+  padding: 0.5rem !important;
+  font-size: 0.75rem !important;
+  border-radius: 2rem !important;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.register-plan-btn {
+  width: 100%;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.6rem !important;
+  font-weight: 600;
+  background: linear-gradient(95deg, #00e6a0, #00b4d8);
+  color: #0a0c10;
+  margin-top: 0.5rem;
+  font-size: 0.75rem !important;
+  border-radius: 2rem !important;
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 230, 160, 0.3);
+  }
+}
+
+.recipe-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.3rem;
+  background: #1a1e28;
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  z-index: 10;
+
+  .recipe-option {
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 0.7rem;
+    text-align: center;
+
+    &:hover {
+      background: rgba(0, 255, 170, 0.1);
+      color: #4cffb0;
+    }
+  }
+}
+
+.panel-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.2), transparent);
+  margin: 0.8rem 0;
+}
+
+.catering-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  color: #eff3f8;
+  text-align: center;
+}
+
+.catering-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .main-content.panel-open {
+    .calendar-wrapper {
+      width: 55%;
+    }
+    .assignment-panel {
+      width: 43%;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .plan-creator {
+    padding: 1rem;
+  }
+
+  .main-content {
+    flex-direction: column;
+  }
+
+  .main-content.panel-open {
+    .calendar-wrapper {
+      width: 100%;
+    }
+    .assignment-panel {
+      width: 100%;
+      margin-top: 1rem;
+      transform: translateY(20px);
+    }
+  }
+
+  .calendar-header h2 {
+    font-size: 1rem;
+  }
+
+  .calendar-cell .day-number {
+    font-size: 0.8rem;
+  }
+
+  .calendar-weekday {
+    font-size: 0.65rem;
+  }
+}

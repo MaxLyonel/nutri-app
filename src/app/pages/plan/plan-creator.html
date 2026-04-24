@@ -1,0 +1,165 @@
+<div class="plan-creator">
+  <!-- Cabecera con formulario del plan -->
+  <div class="plan-header" hlmCard>
+    <div class="plan-header-content">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre del plan *</label>
+          <input hlmInput type="text" placeholder="Ej: Plan Noemí" [(ngModel)]="planName" />
+        </div>
+        <div class="form-group">
+          <label>Detalle</label>
+          <input
+            hlmInput
+            type="text"
+            placeholder="Plan de alimentación para cuidado de salud"
+            [(ngModel)]="planDetail"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal: Calendario + Panel lateral -->
+  <div class="main-content" [class.panel-open]="selectedDay">
+    <!-- Calendario -->
+    <div class="calendar-wrapper">
+      <div class="calendar-container" hlmCard>
+        <!-- Cabecera -->
+        <!-- <div class="calendar-header">
+          <div class="month-display">
+            <h2>{{ getMonthYear() }}</h2>
+          </div>
+          <div class="month-nav">
+            <button hlmBtn variant="ghost" size="icon" (click)="previousMonth()">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button hlmBtn variant="ghost" size="icon" (click)="nextMonth()">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div> -->
+
+        <div class="calendar-header">
+  <button hlmBtn variant="ghost" size="icon" (click)="previousMonth()">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <h2>{{ getMonthYear() }}</h2>
+  <button hlmBtn variant="ghost" size="icon" (click)="nextMonth()">
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+        <!-- Calendario completo en una sola grid -->
+        <div class="calendar-grid">
+          <!-- Primera fila: Días de la semana -->
+          <div class="calendar-weekday" *ngFor="let day of weekDays">
+            {{ day }}
+          </div>
+
+          <!-- Filas de días del mes -->
+          <div
+            *ngFor="let day of flattenedCalendarDays"
+            class="calendar-cell"
+            [class.other-month]="!day.isCurrentMonth"
+            [class.has-plan]="day.hasPlan"
+            [class.selected]="selectedDay === day"
+            (click)="selectDay(day)"
+          >
+            <span class="day-number">{{ day.date.getDate() }}</span>
+            <span class="plan-badge" *ngIf="day.hasPlan">
+              <i class="fas fa-check-circle"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel lateral (igual que antes) -->
+    <div class="assignment-panel" [class.open]="selectedDay">
+      <div class="panel-header">
+        <h3><i class="fas fa-calendar-plus"></i> Asignar Plan</h3>
+        <button hlmBtn variant="ghost" size="icon" class="close-panel" (click)="selectedDay = null">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="panel-body" *ngIf="selectedDay">
+        <p class="selected-date">
+          <i class="fas fa-calendar-day"></i>
+          {{ formatDate(selectedDay.date) }}
+        </p>
+
+        <div class="form-group">
+          <label>CREACIÓN DE PLAN</label>
+          <button hlmBtn variant="outline" class="add-time-btn" (click)="addTime()">
+            <i class="fas fa-plus"></i> Adicionar tiempos
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label>Seleccionar receta</label>
+          <div class="recipe-selector">
+            <button
+              hlmBtn
+              variant="outline"
+              class="recipe-selector-btn"
+              (click)="toggleRecipeSelector()"
+            >
+              {{ selectedRecipe || 'Seleccionar receta' }}
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="recipe-dropdown" *ngIf="showRecipeSelector">
+              <div
+                *ngFor="let recipe of recipes"
+                class="recipe-option"
+                (click)="selectRecipe(recipe)"
+              >
+                {{ recipe }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button hlmBtn variant="default" class="add-plan-btn" (click)="addToPlan()">
+          <i class="fas fa-plus"></i> ADICIONAR
+        </button>
+
+        <div class="panel-divider"></div>
+
+        <div class="catering-section">
+          <h4 class="catering-title">
+            <i class="fas fa-truck"></i> ¿El servicio cuenta con catering?
+          </h4>
+          <div class="catering-form">
+            <div class="form-group">
+              <label>Dirección de entrega</label>
+              <input
+                hlmInput
+                type="text"
+                placeholder="Introduzca dirección"
+                [(ngModel)]="cateringAddress"
+              />
+            </div>
+            <div class="form-group">
+              <label>Hora de entrega</label>
+              <input hlmInput type="time" [(ngModel)]="deliveryTime" />
+            </div>
+            <div class="form-group">
+              <label>Detalle de entrega</label>
+              <input
+                hlmInput
+                type="text"
+                placeholder="Detalle de entrega"
+                [(ngModel)]="deliveryDetail"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button hlmBtn class="register-plan-btn" (click)="registerPlan()">
+          <i class="fas fa-save"></i> REGISTRAR
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

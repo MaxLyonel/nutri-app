@@ -1,33 +1,22 @@
 <div class="clients-view" [class.panel-open]="showRegisterPanel">
-  
+
   <!-- Toolbar -->
   <div class="table-toolbar">
     <div class="flex items-center gap-4">
-      <button hlmBtn class="register-btn" [class.active]="showRegisterPanel" (click)="toggleRegisterPanel()">
+      <button hlmBtn [attr.variant]="showRegisterPanel ? 'register-active' : 'register'"
+        (click)="toggleRegisterPanel()">
         <i class="fas" [class.fa-user-plus]="!showRegisterPanel" [class.fa-times]="showRegisterPanel"></i>
         <span>{{ showRegisterPanel ? 'Cerrar Registro' : 'Registrar Cliente' }}</span>
       </button>
 
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
-        <input
-          hlmInput
-          type="text"
-          placeholder="Buscar cliente por nombre, email..."
-          class="search-input"
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onFilterChange($event)"
-        />
-        <button
-          hlmBtn
-          variant="ghost"
-          size="icon"
-          class="search-clear"
-          *ngIf="searchTerm"
-          (click)="clearSearch()"
-        >
+        <input hlmInput type="text" placeholder="Buscar cliente por nombre, email..." class="search-input"
+          [(ngModel)]="searchTerm" (ngModelChange)="onFilterChange($event)" />
+        <button hlmBtn variant="ghost" size="icon" class="search-clear" *ngIf="searchTerm" (click)="clearSearch()">
           <i class="fas fa-times"></i>
         </button>
+        <!-- <button hlmBtn [attr.variant]="'neon'">Saludo</button> -->
       </div>
 
       <div class="relative">
@@ -37,12 +26,9 @@
         </button>
         <div class="column-menu-dropdown" *ngIf="columnMenuOpen">
           <div class="p-2">
-            <label class="flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-primary/10 rounded" *ngFor="let col of columnOptions">
-              <input
-                type="checkbox"
-                [checked]="isColumnVisible(col.key)"
-                (change)="toggleColumn(col.key)"
-              />
+            <label class="flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-primary/10 rounded"
+              *ngFor="let col of columnOptions">
+              <input type="checkbox" [checked]="isColumnVisible(col.key)" (change)="toggleColumn(col.key)" />
               {{ col.label }}
             </label>
           </div>
@@ -77,26 +63,14 @@
         <form (ngSubmit)="registerClient()">
           <div class="form-group">
             <label>Nombre completo *</label>
-            <input
-              hlmInput
-              type="text"
-              placeholder="Ej: Juan Pérez"
-              [(ngModel)]="newClient.name"
-              name="name"
-              required
-            />
+            <input hlmInput type="text" placeholder="Ej: Juan Pérez" [(ngModel)]="newClient.name" name="name"
+              required />
           </div>
 
           <div class="form-group">
             <label>Correo electrónico *</label>
-            <input
-              hlmInput
-              type="email"
-              placeholder="ejemplo@correo.com"
-              [(ngModel)]="newClient.email"
-              name="email"
-              required
-            />
+            <input hlmInput type="email" placeholder="ejemplo@correo.com" [(ngModel)]="newClient.email" name="email"
+              required />
           </div>
 
           <div class="form-row">
@@ -118,13 +92,9 @@
           <div class="form-group">
             <label>Color del avatar</label>
             <div class="color-options">
-              <div
-                *ngFor="let color of colorOptions"
-                class="color-option"
-                [style.background]="color.value"
-                [class.selected]="newClient.avatarColor === color.value"
-                (click)="newClient.avatarColor = color.value"
-              ></div>
+              <div *ngFor="let color of colorOptions" class="color-option" [style.background]="color.value"
+                [class.selected]="newClient.avatarColor === color.value" (click)="newClient.avatarColor = color.value">
+              </div>
             </div>
           </div>
 
@@ -136,9 +106,14 @@
           </div>
 
           <!-- Botón Registrar - Ancho completo y estilo mejorado -->
-          <button hlmBtn type="submit" class="submit-register-btn">
+          <!-- <button hlmBtn type="submit" class="submit-register-btn">
             <i class="fas fa-save"></i>
             Registrar Cliente
+          </button> -->
+          <button hlmBtn [attr.variant]="'register'"
+            type="submit" class="submit-register-btn">
+            <i class="fas fa-save"  ></i>
+            <span>Registrar</span>
           </button>
         </form>
       </div>
@@ -152,24 +127,21 @@
             <thead>
               <tr>
                 <th class="table-checkbox">
-                  <input 
-                    type="checkbox" 
-                    (change)="toggleSelectAll($event)"
-                    [checked]="isAllSelected()"
-                    [indeterminate]="isSomeSelected()"
-                    class="checkbox-input"
-                  >
+                  <input type="checkbox" (change)="toggleSelectAll($event)" [checked]="isAllSelected()"
+                    [indeterminate]="isSomeSelected()" class="checkbox-input">
                 </th>
                 <th *ngIf="columnVisibility.name" class="table-th sortable" (click)="sort('name')">
                   Nombre
-                  <span class="sort-icon" [class.active]="sortColumn === 'name'" [class.desc]="sortDirection === 'desc'">
+                  <span class="sort-icon" [class.active]="sortColumn === 'name'"
+                    [class.desc]="sortDirection === 'desc'">
                     <i class="fas fa-arrow-up"></i>
                     <i class="fas fa-arrow-down"></i>
                   </span>
                 </th>
                 <th *ngIf="columnVisibility.email" class="table-th sortable" (click)="sort('email')">
                   Email
-                  <span class="sort-icon" [class.active]="sortColumn === 'email'" [class.desc]="sortDirection === 'desc'">
+                  <span class="sort-icon" [class.active]="sortColumn === 'email'"
+                    [class.desc]="sortDirection === 'desc'">
                     <i class="fas fa-arrow-up"></i>
                     <i class="fas fa-arrow-down"></i>
                   </span>
@@ -178,7 +150,8 @@
                 <th *ngIf="columnVisibility.plan" class="table-th">Plan</th>
                 <th *ngIf="columnVisibility.lastActivity" class="table-th sortable" (click)="sort('lastActivity')">
                   Última Actividad
-                  <span class="sort-icon" [class.active]="sortColumn === 'lastActivity'" [class.desc]="sortDirection === 'desc'">
+                  <span class="sort-icon" [class.active]="sortColumn === 'lastActivity'"
+                    [class.desc]="sortDirection === 'desc'">
                     <i class="fas fa-arrow-up"></i>
                     <i class="fas fa-arrow-down"></i>
                   </span>
@@ -189,12 +162,8 @@
             <tbody>
               <tr *ngFor="let client of paginatedData" [class.highlight]="isHighlighted(client.id)">
                 <td class="table-checkbox">
-                  <input 
-                    type="checkbox" 
-                    (change)="toggleSelect(client)"
-                    [checked]="isSelected(client)"
-                    class="checkbox-input"
-                  >
+                  <input type="checkbox" (change)="toggleSelect(client)" [checked]="isSelected(client)"
+                    class="checkbox-input">
                 </td>
                 <td *ngIf="columnVisibility.name" class="table-td">
                   <div class="client-info">
@@ -206,8 +175,10 @@
                 </td>
                 <td *ngIf="columnVisibility.email" class="table-td">{{ client.email }}</td>
                 <td *ngIf="columnVisibility.status" class="table-td">
-                  <span class="status-badge" [class.active]="client.status === 'active'" [class.pending]="client.status === 'pending'" [class.inactive]="client.status === 'inactive'">
-                    {{ client.status === 'active' ? 'Activo' : (client.status === 'pending' ? 'Pendiente' : 'Inactivo') }}
+                  <span class="status-badge" [class.active]="client.status === 'active'"
+                    [class.pending]="client.status === 'pending'" [class.inactive]="client.status === 'inactive'">
+                    {{ client.status === 'active' ? 'Activo' : (client.status === 'pending' ? 'Pendiente' : 'Inactivo')
+                    }}
                   </span>
                 </td>
                 <td *ngIf="columnVisibility.plan" class="table-td">
@@ -234,33 +205,18 @@
         <div class="table-footer">
           <div class="page-info">Mostrando {{ startIndex }} a {{ endIndex }} de {{ filteredData.length }} clientes</div>
           <div class="pagination-controls">
-            <button
-              hlmBtn
-              variant="outline"
-              size="sm"
-              [disabled]="currentPage === 1"
-              (click)="goToPage(currentPage - 1)"
-            >
+            <button hlmBtn variant="outline" size="sm" [disabled]="currentPage === 1"
+              (click)="goToPage(currentPage - 1)">
               <i class="fas fa-chevron-left"></i>
             </button>
             <div class="page-numbers">
-              <button
-                *ngFor="let page of visiblePages"
-                hlmBtn
-                [variant]="currentPage === page ? 'default' : 'outline'"
-                size="sm"
-                (click)="goToPage(page)"
-              >
+              <button *ngFor="let page of visiblePages" hlmBtn [variant]="currentPage === page ? 'default' : 'outline'"
+                size="sm" (click)="goToPage(page)">
                 {{ page }}
               </button>
             </div>
-            <button
-              hlmBtn
-              variant="outline"
-              size="sm"
-              [disabled]="currentPage === totalPages"
-              (click)="goToPage(currentPage + 1)"
-            >
+            <button hlmBtn variant="outline" size="sm" [disabled]="currentPage === totalPages"
+              (click)="goToPage(currentPage + 1)">
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>

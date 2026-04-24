@@ -1,0 +1,85 @@
+// ============================================
+// TEMA PRINCIPAL DE SPARTAN - NUTRE APP
+// Colores, bordes y efectos globales
+// ============================================
+
+:root {
+  // Colores principales - Inspirados en el login original
+  --background: 0 0% 4%;           // #0A0C10 - Fondo negro azulado
+  --foreground: 160 20% 96%;        // #EFF3F8 - Texto claro
+  
+  --card: 0 0% 4%;
+  --card-foreground: 160 20% 96%;
+  
+  --popover: 0 0% 4%;
+  --popover-foreground: 160 20% 96%;
+  
+  // Color primario: Verde neón/azulado del login
+  --primary: 160 100% 45%;          // #00E6A0
+  --primary-foreground: 0 0% 4%;    // Texto sobre fondo primario
+  
+  // Color secundario: Azul verdoso
+  --secondary: 195 100% 45%;        // #00B4D8
+  --secondary-foreground: 0 0% 4%;
+  
+  --muted: 220 15% 12%;             // Fondos de elementos deshabilitados
+  --muted-foreground: 220 10% 60%;
+  
+  --accent: 160 100% 45%;           // Mismo que primary para consistencia
+  --accent-foreground: 0 0% 4%;
+  
+  --destructive: 0 84% 60%;         // Rojo para errores/eliminar
+  --destructive-foreground: 0 0% 98%;
+  
+  --success: 145 63% 49%;           // Verde éxito
+  --success-foreground: 0 0% 4%;
+  
+  --warning: 38 92% 50%;            // Naranja advertencia
+  --warning-foreground: 0 0% 4%;
+  
+  // Bordes e inputs
+  --border: 160 100% 45% / 0.2;     // Bordes verdes semi-transparentes
+  --input: 160 100% 45% / 0.3;      // Inputs con borde verde
+  --ring: 160 100% 45%;             // Focus ring verde
+  
+  // Radio de bordes global
+  --radius: 0.75rem;                // Bordes redondeados como el login
+  
+  // Efectos de glassmorphism
+  --glass-bg: rgba(18, 22, 28, 0.85);
+  --glass-blur: 12px;
+  --glass-border: rgba(0, 255, 170, 0.2);
+  
+  // Sombras
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px rgba(0, 230, 160, 0.3);
+  --shadow-card: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 255, 170, 0.1);
+  --shadow-card-hover: 0 30px 55px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 255, 170, 0.3);
+}
+
+// ============================================
+// MODO OSCURO (si se necesita toggle)
+// ============================================
+.dark {
+  --background: 0 0% 4%;
+  --foreground: 160 20% 96%;
+  --card: 0 0% 4%;
+  --card-foreground: 160 20% 96%;
+  --primary: 160 100% 45%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 195 100% 45%;
+  --secondary-foreground: 0 0% 4%;
+}
+
+// ============================================
+// TIPOGRAFÍA GLOBAL
+// ============================================
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

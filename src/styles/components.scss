@@ -1,0 +1,161 @@
+// ============================================
+// ESTILOS PERSONALIZADOS DE COMPONENTES SPARTAN
+// ============================================
+
+// Nota: Estos estilos se aplican globalmente usando selectores de atributos
+
+// ============================================
+// BOTONES (hlmBtn)
+// ============================================
+[hlmBtn] {
+  transition: all 0.25s ease;
+  font-weight: 600;
+  border-radius: calc(var(--radius) * 1.33);
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Botón primario (variant="default")
+[hlmBtn][variant="default"] {
+  background: linear-gradient(95deg, hsl(var(--primary)), hsl(var(--secondary)));
+  color: hsl(var(--primary-foreground));
+  box-shadow: 0 5px 15px rgba(0, 230, 160, 0.2);
+  
+  &:hover {
+    background: linear-gradient(95deg, #0ff0b0, #20c8e8);
+    box-shadow: 0 8px 22px rgba(0, 230, 160, 0.35);
+  }
+}
+
+// Botón outline
+[hlmBtn][variant="outline"] {
+  background: rgba(0, 255, 170, 0.08);
+  border: 1px solid rgba(0, 255, 170, 0.25);
+  color: #4cffb0;
+  
+  &:hover {
+    background: rgba(0, 255, 170, 0.15);
+    border-color: rgba(0, 255, 170, 0.4);
+  }
+}
+
+// Botón ghost
+[hlmBtn][variant="ghost"] {
+  &:hover {
+    background: rgba(0, 255, 170, 0.1);
+    color: #4cffb0;
+  }
+}
+
+// Botón destructivo (variant="destructive")
+[hlmBtn][variant="destructive"] {
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  
+  &:hover {
+    background: rgba(231, 76, 60, 0.2);
+    transform: translateY(-2px);
+  }
+}
+
+// ============================================
+// INPUTS (hlmInput)
+// ============================================
+[hlmInput] {
+  background: rgba(12, 16, 22, 0.8);
+  border: 1px solid hsl(var(--input));
+  border-radius: calc(var(--radius) * 2);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: hsl(var(--foreground));
+  transition: all 0.25s ease;
+  
+  &::placeholder {
+    color: #6e7e93;
+  }
+  
+  &:focus {
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsla(var(--ring), 0.2);
+    background: rgba(18, 24, 32, 0.95);
+    outline: none;
+  }
+}
+
+// Input con ícono a la izquierda
+.input-with-icon {
+  position: relative;
+  
+  [hlmInput] {
+    padding-left: 2.5rem;
+  }
+  
+  i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4cffb0;
+    font-size: 1rem;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}
+
+// ============================================
+// CARDS (hlmCard)
+// ============================================
+[hlmCard] {
+  background: rgba(18, 22, 28, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 170, 0.1);
+  border-radius: calc(var(--radius) * 2);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 255, 170, 0.3);
+  }
+}
+
+// Glass card específica (con más efecto)
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border-radius: 2rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-3px);
+  }
+}
+
+// ============================================
+// CHECKBOX (hlm-checkbox)
+// ============================================
+hlm-checkbox {
+  .checkbox-input {
+    width: 16px;
+    height: 16px;
+    accent-color: hsl(var(--primary));
+    cursor: pointer;
+  }
+}
+
+// ============================================
+// SEPARADOR (hlm-separator)
+// ============================================
+hlm-separator {
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.2), transparent);
+  height: 1px;
+}
