@@ -59,64 +59,108 @@
         </button>
       </div>
 
-      <div class="panel-body">
-        <form (ngSubmit)="registerClient()">
-          <div class="form-group">
-            <label>Nombre completo *</label>
-            <input hlmInput type="text" placeholder="Ej: Juan Pérez" [(ngModel)]="newClient.name" name="name"
-              required />
+
+
+<div class="panel-body">
+  <form (ngSubmit)="registerClient()">
+    <!-- Nombre - Ancho completo -->
+    <div class="form-group">
+      <label>Nombre *</label>
+      <input hlmInput type="text" placeholder="Nombre" [(ngModel)]="newClient.fullName" name="fullName" required />
+    </div>
+
+    <!-- Apellido - Ancho completo -->
+    <div class="form-group">
+      <label>Apellido *</label>
+      <input hlmInput type="text" placeholder="Apellido" [(ngModel)]="newClient.lastName" name="lastName" required />
+    </div>
+
+    <!-- Género - Switch de Spartan -->
+    <div class="form-group">
+      <label>Género</label>
+      <div class="gender-switch-container">
+        <div class="gender-switch-group">
+          <div class="gender-switch-item" [class.active]="newClient.gender === 'M'" (click)="newClient.gender = 'M'">
+            <i class="fas fa-mars"></i>
+            <span>Masculino</span>
           </div>
-
-          <div class="form-group">
-            <label>Correo electrónico *</label>
-            <input hlmInput type="email" placeholder="ejemplo@correo.com" [(ngModel)]="newClient.email" name="email"
-              required />
+          <div class="gender-switch-item" [class.active]="newClient.gender === 'F'" (click)="newClient.gender = 'F'">
+            <i class="fas fa-venus"></i>
+            <span>Femenino</span>
           </div>
-
-          <div class="form-row">
-            <div class="form-group half">
-              <label>Estado</label>
-              <select hlmInput [(ngModel)]="newClient.status" name="status" class="form-select">
-                <option *ngFor="let opt of statusOptions" [value]="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
-
-            <div class="form-group half">
-              <label>Plan</label>
-              <select hlmInput [(ngModel)]="newClient.plan" name="plan" class="form-select">
-                <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Color del avatar</label>
-            <div class="color-options">
-              <div *ngFor="let color of colorOptions" class="color-option" [style.background]="color.value"
-                [class.selected]="newClient.avatarColor === color.value" (click)="newClient.avatarColor = color.value">
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group preview">
-            <label>Vista previa del avatar</label>
-            <div class="preview-avatar" [style.background]="newClient.avatarColor">
-              {{ newClient.name ? newClient.name.charAt(0).toUpperCase() : '?' }}
-            </div>
-          </div>
-
-          <!-- Botón Registrar - Ancho completo y estilo mejorado -->
-          <!-- <button hlmBtn type="submit" class="submit-register-btn">
-            <i class="fas fa-save"></i>
-            Registrar Cliente
-          </button> -->
-          <button hlmBtn [attr.variant]="'register'"
-            type="submit" class="submit-register-btn">
-            <i class="fas fa-save"  ></i>
-            <span>Registrar</span>
-          </button>
-        </form>
+        </div>
       </div>
+    </div>
+
+    <!-- Carnet de identidad - Ancho completo -->
+    <div class="form-group">
+      <label>Carnet de identidad *</label>
+      <input hlmInput type="text" placeholder="Carnet de identidad" [(ngModel)]="newClient.identityCard" name="identityCard" required />
+    </div>
+
+    <!-- Celular y Email en la misma fila -->
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Celular</label>
+        <input hlmInput type="tel" placeholder="Número de celular" [(ngModel)]="newClient.cellPhone" name="cellPhone" />
+      </div>
+      <div class="form-group half">
+        <label>Email (opcional)</label>
+        <input hlmInput type="email" placeholder="correo@ejemplo.com" [(ngModel)]="newClient.email" name="email" />
+      </div>
+    </div>
+
+    <!-- Peso y Altura en la misma fila -->
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Peso (kg)</label>
+        <input hlmInput type="number" step="0.1" [(ngModel)]="newClient.weight" name="weight" />
+      </div>
+      <div class="form-group half">
+        <label>Altura (m)</label>
+        <input hlmInput type="number" step="0.01" [(ngModel)]="newClient.height" name="height" />
+      </div>
+    </div>
+
+    <!-- Composición corporal y Objetivo en la misma fila -->
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Composición corporal</label>
+        <select hlmInput [(ngModel)]="newClient.bodyComposition" name="bodyComposition" class="form-select">
+          <option *ngFor="let opt of bodyCompositionOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+      <div class="form-group half">
+        <label>Objetivo</label>
+        <select hlmInput [(ngModel)]="newClient.objective" name="objective" class="form-select">
+          <option *ngFor="let opt of objectiveOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Estado y Plan en la misma fila (para la tabla local) -->
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Estado</label>
+        <select hlmInput [(ngModel)]="newClient.status" name="status" class="form-select">
+          <option *ngFor="let opt of statusOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+      <div class="form-group half">
+        <label>Plan</label>
+        <select hlmInput [(ngModel)]="newClient.plan" name="plan" class="form-select">
+          <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Botón Registrar -->
+    <button hlmBtn type="submit" class="submit-register-btn" [disabled]="isLoading">
+      <i class="fas" [class.fa-spinner]="isLoading" [class.fa-save]="!isLoading" [class.fa-pulse]="isLoading"></i>
+      {{ isLoading ? 'Registrando...' : 'Registrar Paciente' }}
+    </button>
+  </form>
+</div>
     </div>
 
     <!-- Tabla de clientes -->
@@ -165,14 +209,14 @@
                   <input type="checkbox" (change)="toggleSelect(client)" [checked]="isSelected(client)"
                     class="checkbox-input">
                 </td>
-                <td *ngIf="columnVisibility.name" class="table-td">
+                <!-- <td *ngIf="columnVisibility.name" class="table-td">
                   <div class="client-info">
                     <div class="client-avatar" [style.background]="client.avatarColor">
                       {{ client.name.charAt(0) }}
                     </div>
                     <span class="font-medium">{{ client.name }}</span>
                   </div>
-                </td>
+                </td> -->
                 <td *ngIf="columnVisibility.email" class="table-td">{{ client.email }}</td>
                 <td *ngIf="columnVisibility.status" class="table-td">
                   <span class="status-badge" [class.active]="client.status === 'active'"

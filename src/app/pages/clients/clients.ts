@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 // Imports de Spartan NG
 import { HlmButtonImports } from 'spartan/button';
@@ -14,7 +15,13 @@ interface Client {
   status: 'active' | 'pending' | 'inactive';
   plan: string;
   lastActivity: string;
-  avatarColor: string;
+}
+
+// Interfaz para la respuesta del API
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data?: any;
 }
 
 @Component({
@@ -36,6 +43,7 @@ export class Clients implements OnInit {
   columnMenuOpen = false;
   searchTerm = '';
   showRegisterPanel = false;
+  isLoading = false; // Para mostrar loading durante el registro
   
   // ID de la fila recién registrada (para el efecto de parpadeo)
   highlightRowId: number | null = null;
@@ -70,16 +78,30 @@ export class Clients implements OnInit {
     { key: 'lastActivity', label: 'Última Actividad' },
   ];
 
-  // Formulario de nuevo cliente
-  newClient = {
-    name: '',
-    email: '',
-    status: 'active' as const,
-    plan: 'Básico',
-    avatarColor: '#00E6A0'
-  };
+  // Opciones para selects del formulario ACTUALIZADO
+  genderOptions = [
+    { value: 'M', label: 'Masculino' },
+    { value: 'F', label: 'Femenino' },
+    { value: 'O', label: 'Otro' }
+  ];
+  
+  objectiveOptions = [
+    { value: 'bajarPeso', label: 'Bajar de peso' },
+    { value: 'subirPeso', label: 'Subir de peso' },
+    { value: 'mantenerPeso', label: 'Mantener peso' },
+    { value: 'ganarMusculo', label: 'Ganar masa muscular' },
+    { value: 'definicion', label: 'Definición corporal' }
+  ];
+  
+  bodyCompositionOptions = [
+    { value: 'Normal', label: 'Normal' },
+    { value: 'Sobrepeso', label: 'Sobrepeso' },
+    { value: 'Obesidad', label: 'Obesidad' },
+    { value: 'Bajo peso', label: 'Bajo peso' },
+    { value: 'Musculoso', label: 'Musculoso' }
+  ];
 
-  // Opciones para selects
+  // Opciones para selects (mantener las existentes)
   planOptions = ['Básico', 'Premium', 'Profesional'];
   statusOptions = [
     { value: 'active', label: 'Activo' },
@@ -94,28 +116,51 @@ export class Clients implements OnInit {
     { value: '#e74c3c', label: 'Rojo' }
   ];
 
+  // Formulario de nuevo cliente - ACTUALIZADO según el endpoint
+  newClient = {
+    // Campos para el endpoint
+    fullName: '',
+    lastName: '',
+    gender: 'M' as 'M' | 'F' | 'O',
+    identityCard: '',
+    cellPhone: '',
+    location: {
+      latitude: -16.5,
+      longitude: -68.15
+    },
+    weight: 70,
+    height: 1.70,
+    bodyComposition: 'Normal',
+    objective: 'bajarPeso',
+    // Campos adicionales para la tabla (no se envían al backend)
+    email: '',
+    status: 'active' as const,
+    plan: 'Básico'
+  };
+  
+
   // Datos de clientes
   private allData: Client[] = [
-    { id: 1, name: 'María González', email: 'maria@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 2 horas', avatarColor: '#00E6A0' },
-    { id: 2, name: 'Carlos Rodríguez', email: 'carlos@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 5 horas', avatarColor: '#00B4D8' },
-    { id: 3, name: 'Laura Fernández', email: 'laura@nutre.com', status: 'pending', plan: 'Premium', lastActivity: 'Hace 1 día', avatarColor: '#ff6b35' },
-    { id: 4, name: 'Ana Martínez', email: 'ana@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 3 horas', avatarColor: '#9c27b0' },
-    { id: 5, name: 'Pedro Sánchez', email: 'pedro@nutre.com', status: 'inactive', plan: 'Básico', lastActivity: 'Hace 2 semanas', avatarColor: '#e74c3c' },
-    { id: 6, name: 'Sofía López', email: 'sofia@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 1 hora', avatarColor: '#00E6A0' },
-    { id: 7, name: 'Javier Ruiz', email: 'javier@nutre.com', status: 'pending', plan: 'Profesional', lastActivity: 'Hace 3 días', avatarColor: '#ff6b35' },
-    { id: 8, name: 'Elena Torres', email: 'elena@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 4 horas', avatarColor: '#00B4D8' },
-    { id: 9, name: 'Diego Ramírez', email: 'diego@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 6 horas', avatarColor: '#00E6A0' },
-    { id: 10, name: 'Carmen Vega', email: 'carmen@nutre.com', status: 'inactive', plan: 'Profesional', lastActivity: 'Hace 1 mes', avatarColor: '#e74c3c' },
-    { id: 11, name: 'Roberto Castro', email: 'roberto@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 30 minutos', avatarColor: '#9c27b0' },
-    { id: 12, name: 'Patricia Díaz', email: 'patricia@nutre.com', status: 'pending', plan: 'Básico', lastActivity: 'Hace 2 días', avatarColor: '#ff6b35' },
-    { id: 13, name: 'Fernando Gil', email: 'fernando@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 12 horas', avatarColor: '#00B4D8' },
-    { id: 14, name: 'Isabel Méndez', email: 'isabel@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 45 minutos', avatarColor: '#00E6A0' },
-    { id: 15, name: 'Ricardo Peña', email: 'ricardo@nutre.com', status: 'inactive', plan: 'Básico', lastActivity: 'Hace 3 semanas', avatarColor: '#e74c3c' },
-    { id: 16, name: 'Natalia Ortiz', email: 'natalia@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 1 hora', avatarColor: '#9c27b0' },
-    { id: 17, name: 'Alberto Flores', email: 'alberto@nutre.com', status: 'pending', plan: 'Premium', lastActivity: 'Hace 4 días', avatarColor: '#ff6b35' },
-    { id: 18, name: 'Verónica Soto', email: 'veronica@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 8 horas', avatarColor: '#00B4D8' },
-    { id: 19, name: 'Manuel Ríos', email: 'manuel@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 2 horas', avatarColor: '#00E6A0' },
-    { id: 20, name: 'Adriana Mora', email: 'adriana@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 20 minutos', avatarColor: '#9c27b0' },
+    { id: 1, name: 'María González', email: 'maria@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 2 horas',  },
+    { id: 2, name: 'Carlos Rodríguez', email: 'carlos@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 5 horas',  },
+    { id: 3, name: 'Laura Fernández', email: 'laura@nutre.com', status: 'pending', plan: 'Premium', lastActivity: 'Hace 1 día',  },
+    { id: 4, name: 'Ana Martínez', email: 'ana@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 3 horas',  },
+    { id: 5, name: 'Pedro Sánchez', email: 'pedro@nutre.com', status: 'inactive', plan: 'Básico', lastActivity: 'Hace 2 semanas',  },
+    { id: 6, name: 'Sofía López', email: 'sofia@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 1 hora',  },
+    { id: 7, name: 'Javier Ruiz', email: 'javier@nutre.com', status: 'pending', plan: 'Profesional', lastActivity: 'Hace 3 días',  },
+    { id: 8, name: 'Elena Torres', email: 'elena@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 4 horas',  },
+    { id: 9, name: 'Diego Ramírez', email: 'diego@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 6 horas',  },
+    { id: 10, name: 'Carmen Vega', email: 'carmen@nutre.com', status: 'inactive', plan: 'Profesional', lastActivity: 'Hace 1 mes',  },
+    { id: 11, name: 'Roberto Castro', email: 'roberto@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 30 minutos',  },
+    { id: 12, name: 'Patricia Díaz', email: 'patricia@nutre.com', status: 'pending', plan: 'Básico', lastActivity: 'Hace 2 días',  },
+    { id: 13, name: 'Fernando Gil', email: 'fernando@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 12 horas',  },
+    { id: 14, name: 'Isabel Méndez', email: 'isabel@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 45 minutos',  },
+    { id: 15, name: 'Ricardo Peña', email: 'ricardo@nutre.com', status: 'inactive', plan: 'Básico', lastActivity: 'Hace 3 semanas',  },
+    { id: 16, name: 'Natalia Ortiz', email: 'natalia@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 1 hora',  },
+    { id: 17, name: 'Alberto Flores', email: 'alberto@nutre.com', status: 'pending', plan: 'Premium', lastActivity: 'Hace 4 días',  },
+    { id: 18, name: 'Verónica Soto', email: 'veronica@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 8 horas',  },
+    { id: 19, name: 'Manuel Ríos', email: 'manuel@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 2 horas',  },
+    { id: 20, name: 'Adriana Mora', email: 'adriana@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 20 minutos',  },
   ];
 
   currentData: Client[] = [];
@@ -128,7 +173,10 @@ export class Clients implements OnInit {
   sortColumn: keyof Client | null = null;
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient  // 👈 Agregar HttpClient
+  ) {
     this.currentData = [...this.allData];
     this.filteredData = [...this.allData];
   }
@@ -169,62 +217,109 @@ export class Clients implements OnInit {
 
   resetForm(): void {
     this.newClient = {
-      name: '',
+      fullName: '',
+      lastName: '',
+      gender: 'M',
+      identityCard: '',
+      cellPhone: '',
+      location: {
+        latitude: -16.5,
+        longitude: -68.15
+      },
+      weight: 70,
+      height: 1.70,
+      bodyComposition: 'Normal',
+      objective: 'bajarPeso',
       email: '',
       status: 'active',
-      plan: 'Básico',
-      avatarColor: '#00E6A0'
+      plan: 'Básico'
     };
   }
 
   // ============================================
-  // REGISTRO DE CLIENTE CON EFECTO DE PARPADEO
+  // REGISTRO DE CLIENTE CON EL ENDPOINT
   // ============================================
-// En el método registerClient(), actualizar el setTimeout a 4000ms
-registerClient(): void {
-  if (!this.newClient.name || !this.newClient.email) {
-    alert('Por favor completa los campos obligatorios');
-    return;
+  async registerClient(): Promise<void> {
+    // Validar campos obligatorios según el endpoint
+    if (!this.newClient.fullName || !this.newClient.lastName || !this.newClient.identityCard) {
+      alert('Por favor completa los campos obligatorios: Nombre, Apellido y Carnet de identidad');
+      return;
+    }
+
+    this.isLoading = true;
+
+    // Construir el payload según el endpoint
+    const payload = {
+      fullName: this.newClient.fullName,
+      lastName: this.newClient.lastName,
+      gender: this.newClient.gender,
+      identityCard: this.newClient.identityCard,
+      cellPhone: this.newClient.cellPhone,
+      location: {
+        latitude: this.newClient.location.latitude,
+        longitude: this.newClient.location.longitude
+      },
+      weight: this.newClient.weight,
+      height: this.newClient.height,
+      bodyComposition: this.newClient.bodyComposition,
+      objective: this.newClient.objective
+    };
+
+    try {
+      const response = await this.http.post<ApiResponse>(
+        'http://localhost:4000/api/advice/create-patient',
+        payload
+      ).toPromise();
+
+      if (response?.success) {
+        // Generar nuevo ID para la tabla local
+        const newId = Math.max(...this.currentData.map(c => c.id), 0) + 1;
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const timeStr = `Hace ${hours}:${minutes.toString().padStart(2, '0')}`;
+        
+        // Crear objeto para la tabla local
+        const newClientData: Client = {
+          id: newId,
+          name: `${this.newClient.fullName} ${this.newClient.lastName}`,
+          email: this.newClient.email || `${this.newClient.fullName.toLowerCase()}@paciente.com`,
+          status: this.newClient.status,
+          plan: this.newClient.plan,
+          lastActivity: timeStr,
+        };
+
+        // Agregar al inicio del array
+        this.currentData.unshift(newClientData);
+        
+        // Resetear filtros y paginación
+        this.searchTerm = '';
+        this.filterData();
+        this.currentPage = 1;
+        
+        // Guardar el ID del nuevo cliente para resaltarlo
+        this.highlightRowId = newId;
+        
+        // Limpiar el resaltado después de 3.5 segundos
+        setTimeout(() => {
+          this.highlightRowId = null;
+          this.cdr.detectChanges();
+        }, 3500);
+        
+        // Cerrar el panel y mostrar mensaje de éxito
+        this.closeRegisterPanel();
+        alert(`✅ Paciente "${newClientData.name}" registrado correctamente`);
+      } else {
+        alert(`❌ Error: ${response?.message || 'No se pudo registrar el paciente'}`);
+      }
+    } catch (error) {
+      console.error('Error al registrar paciente:', error);
+      alert('❌ Error de conexión. Verifica tu conexión al servidor.');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
-  // Generar nuevo ID
-  const newId = Math.max(...this.currentData.map(c => c.id)) + 1;
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const timeStr = `Hace ${hours}:${minutes.toString().padStart(2, '0')}`;
-  
-  const newClientData: Client = {
-    id: newId,
-    name: this.newClient.name,
-    email: this.newClient.email,
-    status: this.newClient.status,
-    plan: this.newClient.plan,
-    lastActivity: timeStr,
-    avatarColor: this.newClient.avatarColor
-  };
-
-  // Agregar al inicio del array
-  this.currentData.unshift(newClientData);
-  
-  // Resetear filtros y paginación
-  this.searchTerm = '';
-  this.filterData();
-  this.currentPage = 1;
-  
-  // Guardar el ID del nuevo cliente para resaltarlo
-  this.highlightRowId = newId;
-  
-  // Limpiar el resaltado después de 4 segundos (más tiempo)
-  setTimeout(() => {
-    this.highlightRowId = null;
-    this.cdr.detectChanges();
-  }, 3500); // Aumentado de 3000 a 4000ms
-  
-  // Cerrar el panel y mostrar mensaje
-  this.closeRegisterPanel();
-  alert(`✅ Cliente "${newClientData.name}" registrado correctamente`);
-}
   // ============================================
   // MÉTODOS DE FILTRADO Y ORDENAMIENTO
   // ============================================

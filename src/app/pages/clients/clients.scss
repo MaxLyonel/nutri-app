@@ -670,6 +670,58 @@ tr.highlight td {
   transition: background-color 0.3s ease-out;
 }
 
+// ============================================
+// SWITCH DE GÉNERO (Personalizado)
+// ============================================
+.gender-switch-container {
+  margin: 0.5rem 0;
+}
+
+.gender-switch-group {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  border-radius: 2rem;
+  overflow: hidden;
+  
+  .gender-switch-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #9aaec7;
+    font-size: 0.8rem;
+    font-weight: 500;
+    
+    i {
+      font-size: 0.9rem;
+    }
+    
+    &:hover {
+      background: rgba(0, 255, 170, 0.05);
+    }
+    
+    &.active {
+      background: linear-gradient(95deg, #00E6A0, #00B4D8);
+      color: #0A0C10;
+      font-weight: 600;
+      
+      i {
+        color: #0A0C10;
+      }
+    }
+  }
+}
+
+// Eliminar estilos del avatar
+.preview {
+  display: none;
+}
+
 // Utilidades
 .flex { display: flex; }
 .items-center { align-items: center; }
