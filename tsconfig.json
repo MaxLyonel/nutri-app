@@ -24,7 +24,8 @@
       "spartan/sheet": ["./libs/ui/sheet/src/index.ts"],
       "spartan/skeleton": ["./libs/ui/skeleton/src/index.ts"],
       "spartan/tooltip": ["./libs/ui/tooltip/src/index.ts"],
-      "spartan/alert": ["./libs/ui/alert/src/index.ts"]
+      "spartan/alert": ["./libs/ui/alert/src/index.ts"],
+      "spartan/table": ["./libs/ui/table/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

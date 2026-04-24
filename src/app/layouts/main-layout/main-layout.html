@@ -1,0 +1,64 @@
+<div class="main-layout">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Nav -->
+    <div class="top-nav">
+      <div class="page-title">
+        <h1>Bienvenido de vuelta, Administrador 👋</h1>
+        <p>Gestiona tu negocio nutricional</p>
+      </div>
+      
+      <div class="top-actions">
+        <button hlmBtn variant="ghost" size="icon" class="notification-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <div class="user-menu-top" (click)="toggleDropdown()">
+          <div class="user-avatar-small">
+            <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
+          </div>
+          <div class="user-info-top">
+            <div class="name">Administrador</div>
+            <div class="role">Super Admin</div>
+          </div>
+          <i class="fas fa-chevron-down" [class.rotated]="dropdownOpen"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" [class.open]="dropdownOpen">
+      <div class="dropdown-header">
+        <div class="user-avatar-small">
+          <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
+        </div>
+        <div>
+          <div class="font-semibold">Administrador</div>
+          <div class="text-muted text-sm">admin@nutre.com</div>
+        </div>
+      </div>
+      <hlm-separator />
+      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
+        <i class="fas fa-user"></i> Mi Perfil
+      </a>
+      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
+        <i class="fas fa-cog"></i> Configuración
+      </a>
+      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
+        <i class="fas fa-question-circle"></i> Ayuda
+      </a>
+      <hlm-separator />
+      <a href="#" class="dropdown-item logout-item" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </a>
+    </div>
+
+    <!-- Aquí se renderiza el componente hijo (Dashboard, Clients, etc.) -->
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

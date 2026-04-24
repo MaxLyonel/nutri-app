@@ -54,7 +54,7 @@
       </div>
       
       <div hlm-sidebar-item class="nav-link">
-        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'clients')">
+        <a routerLink="/clients" routerLinkActive="active" class="nav-link-content" (click)="onNavClick($event, 'clients')">
           <i class="fas fa-users"></i>
           <span *ngIf="!collapsed">Clientes</span>
         </a>

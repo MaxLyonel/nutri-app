@@ -1,181 +1,53 @@
-<div class="dashboard">
-  <app-sidebar (viewChange)="onViewChange($event)" (logoutEvent)="logout()"></app-sidebar>
-
-  <main class="main">
-    <div class="top-nav">
-      <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar...">
-        <i class="fas fa-sliders-h"></i>
+<div class="dashboard-view">
+  <div class="stats-grid">
+    <div hlmCard class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon bg-green-light"><i class="fas fa-users text-green"></i></div>
+        <div class="trend up"><i class="fas fa-arrow-up"></i> +12%</div>
       </div>
-      <div class="top-actions">
-        <div class="notification-btn">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge">3</span>
-        </div>
-        <div class="user-menu-top" (click)="toggleDropdown()">
-          <div class="user-avatar-small">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
-          </div>
-          <div class="user-info-top">
-            <div class="name">Administrador</div>
-            <div class="role">Super Admin</div>
-          </div>
-          <i class="fas fa-chevron-down" [class.rotated]="dropdownOpen"></i>
-        </div>
-      </div>
+      <div class="stat-value">1,284</div>
+      <div class="stat-label">Clientes Totales</div>
     </div>
-
-    <!-- Dropdown Menu -->
-    <div class="dropdown-menu" [class.open]="dropdownOpen">
-      <div class="dropdown-header">
-        <div class="user-avatar-small">
-          <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
-        </div>
-        <div>
-          <div style="font-weight: 600;">Administrador</div>
-          <div style="font-size: 0.75rem; color: #9aaec7;">admin@nutre.com</div>
-        </div>
+    <div hlmCard class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon bg-blue-light"><i class="fas fa-calendar-check text-blue"></i></div>
+        <div class="trend up"><i class="fas fa-arrow-up"></i> +8%</div>
       </div>
-      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
-        <i class="fas fa-user"></i> Mi Perfil
-      </a>
-      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
-        <i class="fas fa-cog"></i> Configuración
-      </a>
-      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
-        <i class="fas fa-question-circle"></i> Ayuda
-      </a>
-      <div class="dropdown-divider"></div>
-      <a href="#" class="dropdown-item logout-item" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-      </a>
+      <div class="stat-value">342</div>
+      <div class="stat-label">Planes Activos</div>
     </div>
-
-    <div class="content">
-      <!-- Vista Overview -->
-      <div *ngIf="currentView === 'overview'" class="view-overview">
-        <div class="welcome-section">
-          <h1>Bienvenido de vuelta, Administrador 👋</h1>
-          <p>Aquí está el resumen de tu negocio nutricional</p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-header">
-              <div class="stat-icon bg-green-light">
-                <i class="fas fa-users text-green"></i>
-              </div>
-              <div class="trend up"><i class="fas fa-arrow-up"></i> +12%</div>
-            </div>
-            <div class="stat-value">1,284</div>
-            <div class="stat-label">Clientes Totales</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-header">
-              <div class="stat-icon bg-blue-light">
-                <i class="fas fa-calendar-check text-blue"></i>
-              </div>
-              <div class="trend up"><i class="fas fa-arrow-up"></i> +8%</div>
-            </div>
-            <div class="stat-value">342</div>
-            <div class="stat-label">Planes Activos</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-header">
-              <div class="stat-icon bg-orange-light">
-                <i class="fas fa-utensils text-orange"></i>
-              </div>
-              <div class="trend down"><i class="fas fa-arrow-down"></i> -2%</div>
-            </div>
-            <div class="stat-value">567</div>
-            <div class="stat-label">Recetas</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-header">
-              <div class="stat-icon bg-purple-light">
-                <i class="fas fa-calendar-week text-purple"></i>
-              </div>
-              <div class="trend up"><i class="fas fa-arrow-up"></i> +15%</div>
-            </div>
-            <div class="stat-value">23</div>
-            <div class="stat-label">Citas Hoy</div>
-          </div>
-        </div>
-
-        <div class="charts-grid">
-          <div class="chart-card">
-            <div class="chart-header">
-              <h3>Progreso de Clientes</h3>
-              <select><option>Últimos 7 días</option></select>
-            </div>
-            <canvas id="clientsChart"></canvas>
-          </div>
-          <div class="chart-card">
-            <div class="chart-header">
-              <h3>Ingresos Mensuales</h3>
-              <select><option>2024</option></select>
-            </div>
-            <canvas id="revenueChart"></canvas>
-          </div>
-        </div>
-
-        <div class="charts-grid">
-          <div class="chart-card">
-            <div class="chart-header">
-              <h3>Actividad Reciente</h3>
-              <a href="#" class="card-link">Ver todas</a>
-            </div>
-            <div class="activities-list">
-              <div class="activity-item">
-                <div class="activity-avatar"><i class="fas fa-user-plus text-green"></i></div>
-                <div class="activity-details">
-                  <div class="activity-title">Nuevo cliente registrado</div>
-                  <div class="activity-time">Hace 5 minutos</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-avatar"><i class="fas fa-calendar-plus text-blue"></i></div>
-                <div class="activity-details">
-                  <div class="activity-title">Nueva cita agendada</div>
-                  <div class="activity-time">Hace 15 minutos</div>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-avatar"><i class="fas fa-utensils text-orange"></i></div>
-                <div class="activity-details">
-                  <div class="activity-title">Receta actualizada</div>
-                  <div class="activity-time">Hace 1 hora</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="chart-card">
-            <div class="chart-header">
-              <h3>Próximas Citas</h3>
-              <a href="#" class="card-link">Ver todas</a>
-            </div>
-            <div class="table-container">
-              <table class="data-table">
-                <thead><tr><th>Cliente</th><th>Hora</th><th>Estado</th></tr></thead>
-                <tbody>
-                  <tr><td>María González</td><td>10:00</td><td><span class="status-badge active">Confirmada</span></td></tr>
-                  <tr><td>Carlos Rodríguez</td><td>11:30</td><td><span class="status-badge active">Confirmada</span></td></tr>
-                  <tr><td>Laura Fernández</td><td>14:00</td><td><span class="status-badge pending">Pendiente</span></td></tr>
-                  <tr><td>Ana Martínez</td><td>16:30</td><td><span class="status-badge active">Confirmada</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+    <div hlmCard class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon bg-orange-light"><i class="fas fa-utensils text-orange"></i></div>
+        <div class="trend down"><i class="fas fa-arrow-down"></i> -2%</div>
       </div>
-
-      <!-- Placeholders para otras vistas -->
-      <div *ngIf="currentView !== 'overview'" class="view-placeholder">
-        <i class="fas fa-chart-line placeholder-icon"></i>
-        <h2>Vista en construcción</h2>
-        <p>Módulo: {{ currentView | titlecase }}</p>
-      </div>
+      <div class="stat-value">567</div>
+      <div class="stat-label">Recetas</div>
     </div>
-  </main>
+    <div hlmCard class="stat-card">
+      <div class="stat-header">
+        <div class="stat-icon bg-purple-light"><i class="fas fa-calendar-week text-purple"></i></div>
+        <div class="trend up"><i class="fas fa-arrow-up"></i> +15%</div>
+      </div>
+      <div class="stat-value">23</div>
+      <div class="stat-label">Citas Hoy</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div hlmCard class="chart-card">
+      <div class="chart-header">
+        <h3>Progreso de Clientes</h3>
+        <select class="chart-select"><option>Últimos 7 días</option></select>
+      </div>
+      <div class="chart-container"><canvas id="clientsChart"></canvas></div>
+    </div>
+    <div hlmCard class="chart-card">
+      <div class="chart-header">
+        <h3>Ingresos Mensuales</h3>
+        <select class="chart-select"><option>2024</option></select>
+      </div>
+      <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+    </div>
+  </div>
 </div>
