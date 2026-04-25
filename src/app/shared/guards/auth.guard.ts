@@ -22,6 +22,6 @@ export const loginGuard: CanActivateFn = () => {
     return true;
   }
 
-  router.navigate(['/dashboard']);
+  router.navigate(['/clients']);
   return false;
 };

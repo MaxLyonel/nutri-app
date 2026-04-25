@@ -55,7 +55,8 @@ export class Login {
 
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
-          localStorage.setItem('token', response.accessToken);
+          localStorage.setItem('accessToken', response.accessToken);
+          localStorage.setItem('refreshToken', response.refreshToken);
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {

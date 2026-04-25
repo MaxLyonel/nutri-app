@@ -7,7 +7,7 @@
   --sidebar-text: #bfd0e5;
   --sidebar-text-hover: #4cffb0;
   --sidebar-active-bg: linear-gradient(135deg, rgba(0, 230, 160, 0.12), rgba(0, 180, 216, 0.08));
-  
+
   width: var(--sidebar-width);
   background: var(--sidebar-bg);
   backdrop-filter: blur(16px);
@@ -46,7 +46,7 @@
 .logo-icon {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #00E6A0, #00B4D8);
+  background: linear-gradient(135deg, #00e6a0, #00b4d8);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@
 
   i {
     font-size: 1.2rem;
-    color: #0A0C10;
+    color: #0a0c10;
   }
 }
 
@@ -63,7 +63,7 @@
   h2 {
     font-size: 1.1rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #FFFFFF, #A0F0E0);
+    background: linear-gradient(135deg, #ffffff, #a0f0e0);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -82,7 +82,7 @@
   padding: 0 !important;
   background: rgba(0, 255, 170, 0.1);
   border-radius: 8px;
-  
+
   i {
     font-size: 0.8rem;
     color: #4cffb0;
@@ -96,15 +96,15 @@
   flex-direction: column;
   overflow-y: auto;
   padding: 0 0.75rem;
-  
+
   &::-webkit-scrollbar {
     width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 255, 170, 0.2);
     border-radius: 4px;
@@ -112,7 +112,8 @@
 }
 
 // User Profile
-.user-profile, .user-profile-collapsed {
+.user-profile,
+.user-profile-collapsed {
   padding: 0.75rem;
   margin-bottom: 1rem;
   background: rgba(0, 0, 0, 0.2);
@@ -132,7 +133,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00E6A0, #00B4D8);
+  background: linear-gradient(135deg, #00e6a0, #00b4d8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,7 +145,7 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #0A0C10;
+    border: 2px solid #0a0c10;
   }
 }
 
@@ -154,16 +155,16 @@
   right: 2px;
   width: 10px;
   height: 10px;
-  background: #00E6A0;
+  background: #00e6a0;
   border-radius: 50%;
-  border: 2px solid #0A0C10;
+  border: 2px solid #0a0c10;
 }
 
 .user-info {
   h4 {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #EFF3F8;
+    color: #eff3f8;
     margin: 0;
   }
   p {
@@ -193,7 +194,7 @@
 .nav-link {
   border-radius: 0.75rem;
   transition: all 0.2s;
-  
+
   .nav-link-content {
     display: flex;
     align-items: center;
@@ -203,41 +204,43 @@
     text-decoration: none;
     cursor: pointer;
     width: 100%;
-    
+
     i {
       width: 20px;
       font-size: 1rem;
     }
-    
+
     span {
       font-size: 0.85rem;
       font-weight: 500;
     }
   }
-  
+
   &:hover {
     background: rgba(0, 255, 170, 0.08);
     .nav-link-content {
       color: var(--sidebar-text-hover);
     }
   }
-  
-  &.active {
+
+  &.active,
+  &:has(.nav-link-content.active) {
     background: var(--sidebar-active-bg);
-    border-left: 2px solid #00E6A0;
+    border-left: 2px solid #00e6a0;
     .nav-link-content {
       color: var(--sidebar-text-hover);
     }
   }
-  
-  .badge {
-    margin-left: auto;
-    background: rgba(0, 230, 160, 0.2);
-    color: #00E6A0;
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 20px;
-  }
+}
+
+// Badge
+.badge {
+  margin-left: auto;
+  background: rgba(0, 230, 160, 0.2);
+  color: #00e6a0;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 20px;
 }
 
 // Sidebar Footer
@@ -261,7 +264,7 @@
   i {
     font-size: 0.9rem;
   }
-  
+
   span {
     font-size: 0.85rem;
   }
@@ -276,20 +279,20 @@
   .logout-btn span {
     display: none;
   }
-  
+
   .nav-link .nav-link-content {
     justify-content: center;
     padding: 0.75rem;
-    
+
     i {
       margin: 0;
     }
   }
-  
+
   .sidebar-footer {
     padding: 0.75rem;
   }
-  
+
   .logout-btn {
     padding: 0.75rem;
   }

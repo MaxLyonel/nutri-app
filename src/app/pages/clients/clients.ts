@@ -1,27 +1,40 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-// Imports de Spartan NG
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { toast } from '@spartan-ng/brain/sonner';
 import { HlmButtonImports } from 'spartan/button';
 import { HlmInputImports } from 'spartan/input';
 import { HlmCardImports } from 'spartan/card';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { AuthService } from '../../shared/services/auth.service';
 
 interface Client {
   id: number;
+  patientId: string;
   name: string;
+  fullName: string;
+  lastName: string;
+  gender: string;
+  identityCard: string;
+  cellPhone: string;
   email: string;
+  weight: number;
+  height: number;
+  bodyComposition: string;
+  objective: string;
   status: 'active' | 'pending' | 'inactive';
   plan: string;
-  lastActivity: string;
 }
 
 // Interfaz para la respuesta del API
 interface ApiResponse {
-  success: boolean;
+  status: string;
   message: string;
   data?: any;
+  statusCode?: number;
+  error?: string;
 }
 
 @Component({
@@ -33,9 +46,10 @@ interface ApiResponse {
     HlmButtonImports,
     HlmInputImports,
     HlmCardImports,
+    ConfirmDialogComponent,
   ],
   templateUrl: './clients.html',
-  styleUrls: ['./clients.scss']
+  styleUrls: ['./clients.scss'],
 })
 export class Clients implements OnInit {
   // Estado de UI
@@ -43,62 +57,73 @@ export class Clients implements OnInit {
   columnMenuOpen = false;
   searchTerm = '';
   showRegisterPanel = false;
+  showDeleteDialog = false;
+  clientToDelete: Client | null = null;
+  isEditing = false;
+  editingClient: Client | null = null;
   isLoading = false; // Para mostrar loading durante el registro
-  
+
   // ID de la fila recién registrada (para el efecto de parpadeo)
   highlightRowId: number | null = null;
-  
+
   // Guardar el estado original de las columnas
   private originalColumnVisibility = {
     name: true,
-    email: true,
-    status: true,
-    plan: true,
-    lastActivity: true,
+    gender: true,
+    identityCard: true,
+    cellPhone: true,
+    weight: true,
+    height: true,
+    bodyComposition: true,
+    objective: true,
   };
 
-  // Visibilidad de columnas
   columnVisibility = {
     name: true,
-    email: true,
-    status: true,
-    plan: true,
-    lastActivity: true,
+    gender: true,
+    identityCard: true,
+    cellPhone: true,
+    weight: true,
+    height: true,
+    bodyComposition: true,
+    objective: true,
   };
 
   // Columnas que se ocultarán al abrir el panel
-  private columnsToHide = ['status', 'plan'];
+  private columnsToHide = ['gender', 'cellPhone'];
 
-  // Opciones de columnas para el menú
   columnOptions = [
     { key: 'name', label: 'Nombre' },
-    { key: 'email', label: 'Email' },
-    { key: 'status', label: 'Estado' },
-    { key: 'plan', label: 'Plan' },
-    { key: 'lastActivity', label: 'Última Actividad' },
+    { key: 'gender', label: 'Género' },
+    { key: 'identityCard', label: 'Carnet' },
+    { key: 'cellPhone', label: 'Celular' },
+    { key: 'weight', label: 'Peso' },
+    { key: 'height', label: 'Altura' },
+    { key: 'bodyComposition', label: 'Composición' },
+    { key: 'objective', label: 'Objetivo' },
   ];
 
   // Opciones para selects del formulario ACTUALIZADO
   genderOptions = [
     { value: 'M', label: 'Masculino' },
     { value: 'F', label: 'Femenino' },
-    { value: 'O', label: 'Otro' }
+    { value: 'O', label: 'Otro' },
   ];
-  
+
   objectiveOptions = [
     { value: 'bajarPeso', label: 'Bajar de peso' },
     { value: 'subirPeso', label: 'Subir de peso' },
     { value: 'mantenerPeso', label: 'Mantener peso' },
     { value: 'ganarMusculo', label: 'Ganar masa muscular' },
-    { value: 'definicion', label: 'Definición corporal' }
+    { value: 'definicion', label: 'Definición corporal' },
   ];
-  
+
   bodyCompositionOptions = [
     { value: 'Normal', label: 'Normal' },
     { value: 'Sobrepeso', label: 'Sobrepeso' },
     { value: 'Obesidad', label: 'Obesidad' },
     { value: 'Bajo peso', label: 'Bajo peso' },
-    { value: 'Musculoso', label: 'Musculoso' }
+    { value: 'Musculoso', label: 'Musculoso' },
   ];
 
   // Opciones para selects (mantener las existentes)
@@ -106,19 +131,35 @@ export class Clients implements OnInit {
   statusOptions = [
     { value: 'active', label: 'Activo' },
     { value: 'pending', label: 'Pendiente' },
-    { value: 'inactive', label: 'Inactivo' }
+    { value: 'inactive', label: 'Inactivo' },
   ];
   colorOptions = [
     { value: '#00E6A0', label: 'Verde' },
     { value: '#00B4D8', label: 'Azul' },
     { value: '#ff6b35', label: 'Naranja' },
     { value: '#9c27b0', label: 'Morado' },
-    { value: '#e74c3c', label: 'Rojo' }
+    { value: '#e74c3c', label: 'Rojo' },
   ];
 
-  // Formulario de nuevo cliente - ACTUALIZADO según el endpoint
+  private readonly API_URL = 'http://localhost:4000/api/advice';
+  private readonly AUTH_URL = 'http://localhost:4000/api/auth/login';
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService,
+  ) {}
+
+  private getHeaders(): HttpHeaders {
+    const accessToken = localStorage.getItem('accessToken');
+    return new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    });
+  }
+
+  // Formulario de nuevo cliente
   newClient = {
-    // Campos para el endpoint
     fullName: '',
     lastName: '',
     gender: 'M' as 'M' | 'F' | 'O',
@@ -126,63 +167,77 @@ export class Clients implements OnInit {
     cellPhone: '',
     location: {
       latitude: -16.5,
-      longitude: -68.15
+      longitude: -68.15,
     },
     weight: 70,
-    height: 1.70,
+    height: 1.7,
     bodyComposition: 'Normal',
     objective: 'bajarPeso',
-    // Campos adicionales para la tabla (no se envían al backend)
-    email: '',
-    status: 'active' as const,
-    plan: 'Básico'
   };
-  
 
-  // Datos de clientes
-  private allData: Client[] = [
-    { id: 1, name: 'María González', email: 'maria@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 2 horas',  },
-    { id: 2, name: 'Carlos Rodríguez', email: 'carlos@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 5 horas',  },
-    { id: 3, name: 'Laura Fernández', email: 'laura@nutre.com', status: 'pending', plan: 'Premium', lastActivity: 'Hace 1 día',  },
-    { id: 4, name: 'Ana Martínez', email: 'ana@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 3 horas',  },
-    { id: 5, name: 'Pedro Sánchez', email: 'pedro@nutre.com', status: 'inactive', plan: 'Básico', lastActivity: 'Hace 2 semanas',  },
-    { id: 6, name: 'Sofía López', email: 'sofia@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 1 hora',  },
-    { id: 7, name: 'Javier Ruiz', email: 'javier@nutre.com', status: 'pending', plan: 'Profesional', lastActivity: 'Hace 3 días',  },
-    { id: 8, name: 'Elena Torres', email: 'elena@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 4 horas',  },
-    { id: 9, name: 'Diego Ramírez', email: 'diego@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 6 horas',  },
-    { id: 10, name: 'Carmen Vega', email: 'carmen@nutre.com', status: 'inactive', plan: 'Profesional', lastActivity: 'Hace 1 mes',  },
-    { id: 11, name: 'Roberto Castro', email: 'roberto@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 30 minutos',  },
-    { id: 12, name: 'Patricia Díaz', email: 'patricia@nutre.com', status: 'pending', plan: 'Básico', lastActivity: 'Hace 2 días',  },
-    { id: 13, name: 'Fernando Gil', email: 'fernando@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 12 horas',  },
-    { id: 14, name: 'Isabel Méndez', email: 'isabel@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 45 minutos',  },
-    { id: 15, name: 'Ricardo Peña', email: 'ricardo@nutre.com', status: 'inactive', plan: 'Básico', lastActivity: 'Hace 3 semanas',  },
-    { id: 16, name: 'Natalia Ortiz', email: 'natalia@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 1 hora',  },
-    { id: 17, name: 'Alberto Flores', email: 'alberto@nutre.com', status: 'pending', plan: 'Premium', lastActivity: 'Hace 4 días',  },
-    { id: 18, name: 'Verónica Soto', email: 'veronica@nutre.com', status: 'active', plan: 'Básico', lastActivity: 'Hace 8 horas',  },
-    { id: 19, name: 'Manuel Ríos', email: 'manuel@nutre.com', status: 'active', plan: 'Profesional', lastActivity: 'Hace 2 horas',  },
-    { id: 20, name: 'Adriana Mora', email: 'adriana@nutre.com', status: 'active', plan: 'Premium', lastActivity: 'Hace 20 minutos',  },
-  ];
+  private readonly allData: Client[] = [];
 
   currentData: Client[] = [];
   filteredData: Client[] = [];
   selectedRows = new Set<number>();
-  
+
   // Paginación
   currentPage = 1;
   pageSize = 10;
   sortColumn: keyof Client | null = null;
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private http: HttpClient  // 👈 Agregar HttpClient
-  ) {
-    this.currentData = [...this.allData];
-    this.filteredData = [...this.allData];
+  ngOnInit(): void {
+    this.loadPatients();
   }
 
-  ngOnInit(): void {
-    this.filterData();
+  async loadPatients(): Promise<void> {
+    try {
+      console.log('Cargando pacientes desde API...');
+      const response = await this.http
+        .get<any>(`${this.API_URL}/all-patients`, { headers: this.getHeaders() })
+        .toPromise();
+
+      if (response?.data && Array.isArray(response.data)) {
+        this.currentData = response.data.map((patient: any, index: number) => ({
+          id: index + 1,
+          patientId: patient.id,
+          name: `${patient.fullName || ''} ${patient.lastName || ''}`.trim(),
+          fullName: patient.fullName,
+          lastName: patient.lastName,
+          gender: patient.gender?.value,
+          identityCard: patient.identityCard?.number,
+          cellPhone: patient.cellPhone?.number,
+          email: patient.email || '',
+          weight: patient.diagnosis?.weight?.value,
+          height: patient.diagnosis?.height?.value,
+          bodyComposition: patient.diagnosis?.bodyComposition?.value,
+          objective: patient.diagnosis?.objective,
+          status: 'active',
+          plan: 'Básico',
+        }));
+        this.filteredData = [...this.currentData];
+        console.log('Pacientes cargados:', this.currentData.length);
+        this.cdr.detectChanges();
+      } else {
+        console.warn('No hay datos en la respuesta');
+      }
+    } catch (error) {
+      console.error('Error al cargar pacientes:', error);
+    }
+  }
+
+  private formatDate(dateString?: string): string {
+    if (!dateString) return 'Hace poco';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    if (diffHours < 1) return 'Hace poco';
+    if (diffHours < 24) return `Hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+    return `Hace ${Math.floor(diffDays / 7)} semana${Math.floor(diffDays / 7) > 1 ? 's' : ''}`;
   }
 
   // ============================================
@@ -198,19 +253,21 @@ export class Clients implements OnInit {
 
   openRegisterPanel(): void {
     this.originalColumnVisibility = { ...this.columnVisibility };
-    
+
     for (const col of this.columnsToHide) {
       if (this.columnVisibility[col as keyof typeof this.columnVisibility]) {
         this.columnVisibility[col as keyof typeof this.columnVisibility] = false;
       }
     }
-    
+
     this.showRegisterPanel = true;
   }
 
   closeRegisterPanel(): void {
     this.columnVisibility = { ...this.originalColumnVisibility };
     this.showRegisterPanel = false;
+    this.isEditing = false;
+    this.editingClient = null;
     this.resetForm();
     this.cdr.detectChanges();
   }
@@ -224,15 +281,12 @@ export class Clients implements OnInit {
       cellPhone: '',
       location: {
         latitude: -16.5,
-        longitude: -68.15
+        longitude: -68.15,
       },
       weight: 70,
-      height: 1.70,
+      height: 1.7,
       bodyComposition: 'Normal',
       objective: 'bajarPeso',
-      email: '',
-      status: 'active',
-      plan: 'Básico'
     };
   }
 
@@ -242,7 +296,7 @@ export class Clients implements OnInit {
   async registerClient(): Promise<void> {
     // Validar campos obligatorios según el endpoint
     if (!this.newClient.fullName || !this.newClient.lastName || !this.newClient.identityCard) {
-      alert('Por favor completa los campos obligatorios: Nombre, Apellido y Carnet de identidad');
+      toast.error('Por favor completa los campos obligatorios');
       return;
     }
 
@@ -257,64 +311,59 @@ export class Clients implements OnInit {
       cellPhone: this.newClient.cellPhone,
       location: {
         latitude: this.newClient.location.latitude,
-        longitude: this.newClient.location.longitude
+        longitude: this.newClient.location.longitude,
       },
       weight: this.newClient.weight,
       height: this.newClient.height,
       bodyComposition: this.newClient.bodyComposition,
-      objective: this.newClient.objective
+      objective: this.newClient.objective,
     };
 
     try {
-      const response = await this.http.post<ApiResponse>(
-        'http://localhost:4000/api/advice/create-patient',
-        payload
-      ).toPromise();
+      const response = await this.http
+        .post<ApiResponse>(`${this.API_URL}/create-patient`, payload, {
+          headers: this.getHeaders(),
+        })
+        .toPromise();
 
-      if (response?.success) {
-        // Generar nuevo ID para la tabla local
-        const newId = Math.max(...this.currentData.map(c => c.id), 0) + 1;
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const timeStr = `Hace ${hours}:${minutes.toString().padStart(2, '0')}`;
-        
-        // Crear objeto para la tabla local
+      if (response?.status === 'success') {
+        const newId = Math.max(...this.currentData.map((c) => c.id), 0) + 1;
+
         const newClientData: Client = {
           id: newId,
+          patientId: '',
           name: `${this.newClient.fullName} ${this.newClient.lastName}`,
-          email: this.newClient.email || `${this.newClient.fullName.toLowerCase()}@paciente.com`,
-          status: this.newClient.status,
-          plan: this.newClient.plan,
-          lastActivity: timeStr,
+          fullName: this.newClient.fullName,
+          lastName: this.newClient.lastName,
+          gender: this.newClient.gender,
+          identityCard: this.newClient.identityCard,
+          cellPhone: this.newClient.cellPhone,
+          email: '',
+          weight: this.newClient.weight,
+          height: this.newClient.height,
+          bodyComposition: this.newClient.bodyComposition,
+          objective: this.newClient.objective,
+          status: 'active',
+          plan: 'Básico',
         };
 
         // Agregar al inicio del array
         this.currentData.unshift(newClientData);
-        
-        // Resetear filtros y paginación
-        this.searchTerm = '';
-        this.filterData();
-        this.currentPage = 1;
-        
-        // Guardar el ID del nuevo cliente para resaltarlo
-        this.highlightRowId = newId;
-        
-        // Limpiar el resaltado después de 3.5 segundos
-        setTimeout(() => {
-          this.highlightRowId = null;
-          this.cdr.detectChanges();
-        }, 3500);
-        
-        // Cerrar el panel y mostrar mensaje de éxito
+
+        // Cerrar el panel
         this.closeRegisterPanel();
-        alert(`✅ Paciente "${newClientData.name}" registrado correctamente`);
+
+        // Recargar la lista desde la API
+        await this.loadPatients();
+
+        // Mostrar mensaje de éxito
+        toast.success(`Paciente "${newClientData.name}" registrado correctamente`);
       } else {
-        alert(`❌ Error: ${response?.message || 'No se pudo registrar el paciente'}`);
+        toast.error(response?.message || 'No se pudo registrar el paciente');
       }
     } catch (error) {
       console.error('Error al registrar paciente:', error);
-      alert('❌ Error de conexión. Verifica tu conexión al servidor.');
+      toast.error('Error de conexión. Verifica tu conexión al servidor.');
     } finally {
       this.isLoading = false;
     }
@@ -328,9 +377,12 @@ export class Clients implements OnInit {
       this.filteredData = [...this.currentData];
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredData = this.currentData.filter(item =>
-        item.name.toLowerCase().includes(term) ||
-        item.email.toLowerCase().includes(term)
+      this.filteredData = this.currentData.filter(
+        (item) =>
+          item.name.toLowerCase().includes(term) ||
+          item.identityCard?.toLowerCase().includes(term) ||
+          item.cellPhone?.includes(term) ||
+          item.objective?.toLowerCase().includes(term),
       );
     }
     this.sortData();
@@ -340,14 +392,14 @@ export class Clients implements OnInit {
 
   sortData(): void {
     if (!this.sortColumn) return;
-    
+
     this.filteredData.sort((a, b) => {
       let valA = a[this.sortColumn!] as string;
       let valB = b[this.sortColumn!] as string;
-      
+
       valA = typeof valA === 'string' ? valA.toLowerCase() : valA;
       valB = typeof valB === 'string' ? valB.toLowerCase() : valB;
-      
+
       if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
       if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
       return 0;
@@ -399,7 +451,7 @@ export class Clients implements OnInit {
     const pages: number[] = [];
     let startPage = Math.max(1, this.currentPage - 2);
     let endPage = Math.min(this.totalPages, this.currentPage + 2);
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
@@ -424,9 +476,9 @@ export class Clients implements OnInit {
   toggleSelectAll(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      this.paginatedData.forEach(item => this.selectedRows.add(item.id));
+      this.paginatedData.forEach((item) => this.selectedRows.add(item.id));
     } else {
-      this.paginatedData.forEach(item => this.selectedRows.delete(item.id));
+      this.paginatedData.forEach((item) => this.selectedRows.delete(item.id));
     }
   }
 
@@ -443,35 +495,133 @@ export class Clients implements OnInit {
   }
 
   isAllSelected(): boolean {
-    return this.paginatedData.length > 0 && 
-           this.paginatedData.every(item => this.selectedRows.has(item.id));
+    return (
+      this.paginatedData.length > 0 &&
+      this.paginatedData.every((item) => this.selectedRows.has(item.id))
+    );
   }
 
   isSomeSelected(): boolean {
-    return this.paginatedData.some(item => this.selectedRows.has(item.id)) && 
-           !this.isAllSelected();
+    return (
+      this.paginatedData.some((item) => this.selectedRows.has(item.id)) && !this.isAllSelected()
+    );
   }
 
   deleteSelected(): void {
     if (confirm(`¿Eliminar ${this.selectedRows.size} cliente(s)?`)) {
-      this.currentData = this.currentData.filter(item => !this.selectedRows.has(item.id));
-      this.filteredData = this.filteredData.filter(item => !this.selectedRows.has(item.id));
+      this.currentData = this.currentData.filter((item) => !this.selectedRows.has(item.id));
+      this.filteredData = this.filteredData.filter((item) => !this.selectedRows.has(item.id));
       this.selectedRows.clear();
       this.filterData();
     }
   }
 
-  deleteClient(id: number): void {
-    if (confirm('¿Eliminar este cliente?')) {
-      this.currentData = this.currentData.filter(item => item.id !== id);
-      this.filteredData = this.filteredData.filter(item => item.id !== id);
-      this.selectedRows.delete(id);
-      this.filterData();
+  deleteClient(client: Client): void {
+    if (!client.patientId) {
+      toast.error('No se puede eliminar: falta el ID del paciente');
+      return;
+    }
+    this.clientToDelete = client;
+    this.showDeleteDialog = true;
+  }
+
+  confirmDelete(): void {
+    if (this.clientToDelete?.patientId) {
+      this.deletePatientByApi(this.clientToDelete.patientId);
+    }
+    this.showDeleteDialog = false;
+    this.clientToDelete = null;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteDialog = false;
+    this.clientToDelete = null;
+  }
+
+  async deletePatientByApi(patientId: string): Promise<void> {
+    try {
+      const response = await this.http
+        .delete<any>(`${this.API_URL}/patient/${patientId}`, {
+          headers: this.getHeaders(),
+        })
+        .toPromise();
+
+      if (response?.status === 'success') {
+        toast.success('Paciente eliminado correctamente');
+        await this.loadPatients();
+      } else {
+        toast.error(response?.message || 'No se pudo eliminar el paciente');
+      }
+    } catch (error) {
+      console.error('Error al eliminar paciente:', error);
+      toast.error('Error de conexión');
     }
   }
 
-  editClient(id: number): void {
-    alert(`Editar cliente ID: ${id}`);
+  editClient(client: Client): void {
+    this.editingClient = client;
+    this.isEditing = true;
+    this.newClient = {
+      fullName: client.fullName,
+      lastName: client.lastName,
+      gender: client.gender as 'M' | 'F' | 'O',
+      identityCard: client.identityCard,
+      cellPhone: client.cellPhone,
+      location: { latitude: -16.5, longitude: -68.15 },
+      weight: client.weight,
+      height: client.height,
+      bodyComposition: client.bodyComposition,
+      objective: client.objective,
+    };
+    this.showRegisterPanel = true;
+  }
+
+  async updateClient(): Promise<void> {
+    if (!this.editingClient?.patientId) {
+      toast.error('No se puede actualizar: falta el ID del paciente');
+      return;
+    }
+
+    if (!this.newClient.fullName || !this.newClient.lastName || !this.newClient.identityCard) {
+      toast.error('Por favor completa los campos obligatorios');
+      return;
+    }
+
+    this.isLoading = true;
+
+    const payload = {
+      fullName: this.newClient.fullName,
+      lastName: this.newClient.lastName,
+      gender: this.newClient.gender,
+      identityCard: this.newClient.identityCard,
+      cellPhone: this.newClient.cellPhone,
+      location: this.newClient.location,
+      weight: this.newClient.weight,
+      height: this.newClient.height,
+      bodyComposition: this.newClient.bodyComposition,
+      objective: this.newClient.objective,
+    };
+
+    try {
+      const response = await this.http
+        .put<ApiResponse>(`${this.API_URL}/patient/${this.editingClient.patientId}`, payload, {
+          headers: this.getHeaders(),
+        })
+        .toPromise();
+
+      if (response?.status === 'success') {
+        toast.success('Paciente actualizado correctamente');
+        this.closeRegisterPanel();
+        await this.loadPatients();
+      } else {
+        toast.error(response?.message || 'No se pudo actualizar el paciente');
+      }
+    } catch (error) {
+      console.error('Error al actualizar paciente:', error);
+      toast.error('Error de conexión');
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   // ============================================
@@ -480,7 +630,7 @@ export class Clients implements OnInit {
   toggleColumn(columnKey: string): void {
     this.columnVisibility = {
       ...this.columnVisibility,
-      [columnKey]: !this.columnVisibility[columnKey as keyof typeof this.columnVisibility]
+      [columnKey]: !this.columnVisibility[columnKey as keyof typeof this.columnVisibility],
     };
     this.cdr.detectChanges();
   }
@@ -490,7 +640,7 @@ export class Clients implements OnInit {
   }
 
   get visibleColumnCount(): number {
-    return Object.values(this.columnVisibility).filter(v => v).length;
+    return Object.values(this.columnVisibility).filter((v) => v).length;
   }
 
   toggleColumnMenu(): void {
@@ -510,7 +660,13 @@ export class Clients implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('isLoggedIn');
-    window.location.href = '/login';
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      },
+    });
   }
 }

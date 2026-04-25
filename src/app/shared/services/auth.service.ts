@@ -10,6 +10,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   accessToken: string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;
@@ -31,7 +32,8 @@ export class AuthService {
 
   logout(): Observable<void> {
     const token = this.getToken();
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     return this.http.post<void>(
       this.logoutUrl,
       {},
@@ -42,7 +44,11 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('accessToken');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 
   isAuthenticated(): boolean {

@@ -1,34 +1,65 @@
 <div class="clients-view" [class.panel-open]="showRegisterPanel">
-
   <!-- Toolbar -->
   <div class="table-toolbar">
     <div class="flex items-center gap-4">
-      <button hlmBtn [attr.variant]="showRegisterPanel ? 'register-active' : 'register'"
-        (click)="toggleRegisterPanel()">
-        <i class="fas" [class.fa-user-plus]="!showRegisterPanel" [class.fa-times]="showRegisterPanel"></i>
+      <button
+        hlmBtn
+        [attr.variant]="showRegisterPanel ? 'register-active' : 'register'"
+        (click)="toggleRegisterPanel()"
+      >
+        <i
+          class="fas"
+          [class.fa-user-plus]="!showRegisterPanel"
+          [class.fa-times]="showRegisterPanel"
+        ></i>
         <span>{{ showRegisterPanel ? 'Cerrar Registro' : 'Registrar Cliente' }}</span>
       </button>
 
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
-        <input hlmInput type="text" placeholder="Buscar cliente por nombre, email..." class="search-input"
-          [(ngModel)]="searchTerm" (ngModelChange)="onFilterChange($event)" />
-        <button hlmBtn variant="ghost" size="icon" class="search-clear" *ngIf="searchTerm" (click)="clearSearch()">
+        <input
+          hlmInput
+          type="text"
+          placeholder="Buscar cliente por nombre, email..."
+          class="search-input"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onFilterChange($event)"
+        />
+        <button
+          hlmBtn
+          variant="ghost"
+          size="icon"
+          class="search-clear"
+          *ngIf="searchTerm"
+          (click)="clearSearch()"
+        >
           <i class="fas fa-times"></i>
         </button>
         <!-- <button hlmBtn [attr.variant]="'neon'">Saludo</button> -->
       </div>
 
       <div class="relative">
-        <button hlmBtn variant="outline" size="sm" class="gap-2 column-selector-btn" (click)="toggleColumnMenu()">
+        <button
+          hlmBtn
+          variant="outline"
+          size="sm"
+          class="gap-2 column-selector-btn"
+          (click)="toggleColumnMenu()"
+        >
           <i class="fas fa-columns"></i> Columnas
           <i class="fas fa-chevron-down text-xs"></i>
         </button>
         <div class="column-menu-dropdown" *ngIf="columnMenuOpen">
           <div class="p-2">
-            <label class="flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-primary/10 rounded"
-              *ngFor="let col of columnOptions">
-              <input type="checkbox" [checked]="isColumnVisible(col.key)" (change)="toggleColumn(col.key)" />
+            <label
+              class="flex items-center gap-2 px-2 py-1 cursor-pointer hover:bg-primary/10 rounded"
+              *ngFor="let col of columnOptions"
+            >
+              <input
+                type="checkbox"
+                [checked]="isColumnVisible(col.key)"
+                (change)="toggleColumn(col.key)"
+              />
               {{ col.label }}
             </label>
           </div>
@@ -52,115 +83,171 @@
       <div class="panel-header">
         <h3>
           <i class="fas fa-user-plus"></i>
-          Registrar Nuevo Cliente
+          {{ isEditing ? 'Editar Cliente' : 'Registrar Nuevo Cliente' }}
         </h3>
-        <button hlmBtn variant="ghost" size="icon" class="close-panel-btn" (click)="closeRegisterPanel()">
+        <button
+          hlmBtn
+          variant="ghost"
+          size="icon"
+          class="close-panel-btn"
+          (click)="closeRegisterPanel()"
+        >
           <i class="fas fa-times"></i>
         </button>
       </div>
 
-
-
-<div class="panel-body">
-  <form (ngSubmit)="registerClient()">
-    <!-- Nombre - Ancho completo -->
-    <div class="form-group">
-      <label>Nombre *</label>
-      <input hlmInput type="text" placeholder="Nombre" [(ngModel)]="newClient.fullName" name="fullName" required />
-    </div>
-
-    <!-- Apellido - Ancho completo -->
-    <div class="form-group">
-      <label>Apellido *</label>
-      <input hlmInput type="text" placeholder="Apellido" [(ngModel)]="newClient.lastName" name="lastName" required />
-    </div>
-
-    <!-- Género - Switch de Spartan -->
-    <div class="form-group">
-      <label>Género</label>
-      <div class="gender-switch-container">
-        <div class="gender-switch-group">
-          <div class="gender-switch-item" [class.active]="newClient.gender === 'M'" (click)="newClient.gender = 'M'">
-            <i class="fas fa-mars"></i>
-            <span>Masculino</span>
+      <div class="panel-body">
+        <form (ngSubmit)="isEditing ? updateClient() : registerClient()">
+          <!-- Nombre - Ancho completo -->
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input
+              hlmInput
+              type="text"
+              placeholder="Nombre"
+              [(ngModel)]="newClient.fullName"
+              name="fullName"
+              required
+            />
           </div>
-          <div class="gender-switch-item" [class.active]="newClient.gender === 'F'" (click)="newClient.gender = 'F'">
-            <i class="fas fa-venus"></i>
-            <span>Femenino</span>
+
+          <!-- Apellido - Ancho completo -->
+          <div class="form-group">
+            <label>Apellido *</label>
+            <input
+              hlmInput
+              type="text"
+              placeholder="Apellido"
+              [(ngModel)]="newClient.lastName"
+              name="lastName"
+              required
+            />
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Carnet de identidad - Ancho completo -->
-    <div class="form-group">
-      <label>Carnet de identidad *</label>
-      <input hlmInput type="text" placeholder="Carnet de identidad" [(ngModel)]="newClient.identityCard" name="identityCard" required />
-    </div>
+          <!-- Género - Switch de Spartan -->
+          <div class="form-group">
+            <label>Género</label>
+            <div class="gender-switch-container">
+              <div class="gender-switch-group">
+                <div
+                  class="gender-switch-item"
+                  [class.active]="newClient.gender === 'M'"
+                  (click)="newClient.gender = 'M'"
+                >
+                  <i class="fas fa-mars"></i>
+                  <span>Masculino</span>
+                </div>
+                <div
+                  class="gender-switch-item"
+                  [class.active]="newClient.gender === 'F'"
+                  (click)="newClient.gender = 'F'"
+                >
+                  <i class="fas fa-venus"></i>
+                  <span>Femenino</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!-- Celular y Email en la misma fila -->
-    <div class="form-row">
-      <div class="form-group half">
-        <label>Celular</label>
-        <input hlmInput type="tel" placeholder="Número de celular" [(ngModel)]="newClient.cellPhone" name="cellPhone" />
-      </div>
-      <div class="form-group half">
-        <label>Email (opcional)</label>
-        <input hlmInput type="email" placeholder="correo@ejemplo.com" [(ngModel)]="newClient.email" name="email" />
-      </div>
-    </div>
+          <!-- Carnet de identidad - Ancho completo -->
+          <div class="form-group">
+            <label>Carnet de identidad *</label>
+            <input
+              hlmInput
+              type="text"
+              placeholder="Carnet de identidad"
+              [(ngModel)]="newClient.identityCard"
+              name="identityCard"
+              required
+            />
+          </div>
 
-    <!-- Peso y Altura en la misma fila -->
-    <div class="form-row">
-      <div class="form-group half">
-        <label>Peso (kg)</label>
-        <input hlmInput type="number" step="0.1" [(ngModel)]="newClient.weight" name="weight" />
-      </div>
-      <div class="form-group half">
-        <label>Altura (m)</label>
-        <input hlmInput type="number" step="0.01" [(ngModel)]="newClient.height" name="height" />
-      </div>
-    </div>
+          <!-- Celular -->
+          <div class="form-group">
+            <label>Celular</label>
+            <input
+              hlmInput
+              type="tel"
+              placeholder="Número de celular"
+              [(ngModel)]="newClient.cellPhone"
+              name="cellPhone"
+            />
+          </div>
 
-    <!-- Composición corporal y Objetivo en la misma fila -->
-    <div class="form-row">
-      <div class="form-group half">
-        <label>Composición corporal</label>
-        <select hlmInput [(ngModel)]="newClient.bodyComposition" name="bodyComposition" class="form-select">
-          <option *ngFor="let opt of bodyCompositionOptions" [value]="opt.value">{{ opt.label }}</option>
-        </select>
-      </div>
-      <div class="form-group half">
-        <label>Objetivo</label>
-        <select hlmInput [(ngModel)]="newClient.objective" name="objective" class="form-select">
-          <option *ngFor="let opt of objectiveOptions" [value]="opt.value">{{ opt.label }}</option>
-        </select>
-      </div>
-    </div>
+          <!-- Peso y Altura en la misma fila -->
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Peso (kg)</label>
+              <input
+                hlmInput
+                type="number"
+                step="0.1"
+                [(ngModel)]="newClient.weight"
+                name="weight"
+              />
+            </div>
+            <div class="form-group half">
+              <label>Altura (m)</label>
+              <input
+                hlmInput
+                type="number"
+                step="0.01"
+                [(ngModel)]="newClient.height"
+                name="height"
+              />
+            </div>
+          </div>
 
-    <!-- Estado y Plan en la misma fila (para la tabla local) -->
-    <div class="form-row">
-      <div class="form-group half">
-        <label>Estado</label>
-        <select hlmInput [(ngModel)]="newClient.status" name="status" class="form-select">
-          <option *ngFor="let opt of statusOptions" [value]="opt.value">{{ opt.label }}</option>
-        </select>
-      </div>
-      <div class="form-group half">
-        <label>Plan</label>
-        <select hlmInput [(ngModel)]="newClient.plan" name="plan" class="form-select">
-          <option *ngFor="let plan of planOptions" [value]="plan">{{ plan }}</option>
-        </select>
-      </div>
-    </div>
+          <!-- Composición corporal y Objetivo en la misma fila -->
+          <div class="form-row">
+            <div class="form-group half">
+              <label>Composición corporal</label>
+              <select
+                hlmInput
+                [(ngModel)]="newClient.bodyComposition"
+                name="bodyComposition"
+                class="form-select"
+              >
+                <option *ngFor="let opt of bodyCompositionOptions" [value]="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group half">
+              <label>Objetivo</label>
+              <select
+                hlmInput
+                [(ngModel)]="newClient.objective"
+                name="objective"
+                class="form-select"
+              >
+                <option *ngFor="let opt of objectiveOptions" [value]="opt.value">
+                  {{ opt.label }}
+                </option>
+              </select>
+            </div>
+          </div>
 
-    <!-- Botón Registrar -->
-    <button hlmBtn type="submit" class="submit-register-btn" [disabled]="isLoading">
-      <i class="fas" [class.fa-spinner]="isLoading" [class.fa-save]="!isLoading" [class.fa-pulse]="isLoading"></i>
-      {{ isLoading ? 'Registrando...' : 'Registrar Paciente' }}
-    </button>
-  </form>
-</div>
+          <!-- Botón Registrar -->
+          <button hlmBtn type="submit" class="submit-register-btn" [disabled]="isLoading">
+            <i
+              class="fas"
+              [class.fa-spinner]="isLoading"
+              [class.fa-save]="!isLoading"
+              [class.fa-pulse]="isLoading"
+            ></i>
+            {{
+              isLoading
+                ? isEditing
+                  ? 'Actualizando...'
+                  : 'Registrando...'
+                : isEditing
+                  ? 'Actualizar Paciente'
+                  : 'Registrar Paciente'
+            }}
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- Tabla de clientes -->
@@ -171,75 +258,110 @@
             <thead>
               <tr>
                 <th class="table-checkbox">
-                  <input type="checkbox" (change)="toggleSelectAll($event)" [checked]="isAllSelected()"
-                    [indeterminate]="isSomeSelected()" class="checkbox-input">
+                  <input
+                    type="checkbox"
+                    (change)="toggleSelectAll($event)"
+                    [checked]="isAllSelected()"
+                    [indeterminate]="isSomeSelected()"
+                    class="checkbox-input"
+                  />
                 </th>
                 <th *ngIf="columnVisibility.name" class="table-th sortable" (click)="sort('name')">
                   Nombre
-                  <span class="sort-icon" [class.active]="sortColumn === 'name'"
-                    [class.desc]="sortDirection === 'desc'">
+                  <span
+                    class="sort-icon"
+                    [class.active]="sortColumn === 'name'"
+                    [class.desc]="sortDirection === 'desc'"
+                  >
                     <i class="fas fa-arrow-up"></i>
                     <i class="fas fa-arrow-down"></i>
                   </span>
                 </th>
-                <th *ngIf="columnVisibility.email" class="table-th sortable" (click)="sort('email')">
-                  Email
-                  <span class="sort-icon" [class.active]="sortColumn === 'email'"
-                    [class.desc]="sortDirection === 'desc'">
-                    <i class="fas fa-arrow-up"></i>
-                    <i class="fas fa-arrow-down"></i>
-                  </span>
+                <th *ngIf="columnVisibility.gender" class="table-th">Género</th>
+                <th
+                  *ngIf="columnVisibility.identityCard"
+                  class="table-th sortable"
+                  (click)="sort('identityCard')"
+                >
+                  Carnet
                 </th>
-                <th *ngIf="columnVisibility.status" class="table-th">Estado</th>
-                <th *ngIf="columnVisibility.plan" class="table-th">Plan</th>
-                <th *ngIf="columnVisibility.lastActivity" class="table-th sortable" (click)="sort('lastActivity')">
-                  Última Actividad
-                  <span class="sort-icon" [class.active]="sortColumn === 'lastActivity'"
-                    [class.desc]="sortDirection === 'desc'">
-                    <i class="fas fa-arrow-up"></i>
-                    <i class="fas fa-arrow-down"></i>
-                  </span>
+                <th *ngIf="columnVisibility.cellPhone" class="table-th">Celular</th>
+                <th
+                  *ngIf="columnVisibility.weight"
+                  class="table-th sortable"
+                  (click)="sort('weight')"
+                >
+                  Peso (kg)
                 </th>
+                <th *ngIf="columnVisibility.height" class="table-th">Altura (m)</th>
+                <th *ngIf="columnVisibility.bodyComposition" class="table-th">Composición</th>
+                <th *ngIf="columnVisibility.objective" class="table-th">Objetivo</th>
                 <th class="table-actions">Acciones</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let client of paginatedData" [class.highlight]="isHighlighted(client.id)">
                 <td class="table-checkbox">
-                  <input type="checkbox" (change)="toggleSelect(client)" [checked]="isSelected(client)"
-                    class="checkbox-input">
+                  <input
+                    type="checkbox"
+                    (change)="toggleSelect(client)"
+                    [checked]="isSelected(client)"
+                    class="checkbox-input"
+                  />
                 </td>
-                <!-- <td *ngIf="columnVisibility.name" class="table-td">
-                  <div class="client-info">
-                    <div class="client-avatar" [style.background]="client.avatarColor">
-                      {{ client.name.charAt(0) }}
-                    </div>
-                    <span class="font-medium">{{ client.name }}</span>
-                  </div>
-                </td> -->
-                <td *ngIf="columnVisibility.email" class="table-td">{{ client.email }}</td>
-                <td *ngIf="columnVisibility.status" class="table-td">
-                  <span class="status-badge" [class.active]="client.status === 'active'"
-                    [class.pending]="client.status === 'pending'" [class.inactive]="client.status === 'inactive'">
-                    {{ client.status === 'active' ? 'Activo' : (client.status === 'pending' ? 'Pendiente' : 'Inactivo')
+                <td *ngIf="columnVisibility.name" class="table-td">{{ client.name }}</td>
+                <td *ngIf="columnVisibility.gender" class="table-td">
+                  <span
+                    class="gender-badge"
+                    [class.masculino]="client.gender === 'M'"
+                    [class.femenino]="client.gender === 'F'"
+                  >
+                    {{
+                      client.gender === 'M'
+                        ? 'Masculino'
+                        : client.gender === 'F'
+                          ? 'Femenino'
+                          : 'Otro'
                     }}
                   </span>
                 </td>
-                <td *ngIf="columnVisibility.plan" class="table-td">
-                  <span class="plan-badge">{{ client.plan }}</span>
+                <td *ngIf="columnVisibility.identityCard" class="table-td">
+                  {{ client.identityCard }}
                 </td>
-                <td *ngIf="columnVisibility.lastActivity" class="table-td">{{ client.lastActivity }}</td>
+                <td *ngIf="columnVisibility.cellPhone" class="table-td">{{ client.cellPhone }}</td>
+                <td *ngIf="columnVisibility.weight" class="table-td">{{ client.weight }} kg</td>
+                <td *ngIf="columnVisibility.height" class="table-td">{{ client.height }} m</td>
+                <td *ngIf="columnVisibility.bodyComposition" class="table-td">
+                  <span class="composition-badge">{{ client.bodyComposition }}</span>
+                </td>
+                <td *ngIf="columnVisibility.objective" class="table-td">
+                  <span class="objective-badge">{{ client.objective }}</span>
+                </td>
                 <td class="table-actions">
-                  <button hlmBtn variant="ghost" size="icon" class="action-btn" (click)="editClient(client.id)">
+                  <button
+                    hlmBtn
+                    variant="ghost"
+                    size="icon"
+                    class="action-btn"
+                    (click)="editClient(client)"
+                  >
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button hlmBtn variant="ghost" size="icon" class="action-btn" (click)="deleteClient(client.id)">
+                  <button
+                    hlmBtn
+                    variant="ghost"
+                    size="icon"
+                    class="action-btn"
+                    (click)="deleteClient(client)"
+                  >
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>
               </tr>
               <tr *ngIf="paginatedData.length === 0">
-                <td [attr.colspan]="visibleColumnCount + 2" class="table-empty">No hay clientes disponibles</td>
+                <td [attr.colspan]="visibleColumnCount + 2" class="table-empty">
+                  No hay pacientes disponibles
+                </td>
               </tr>
             </tbody>
           </table>
@@ -247,20 +369,37 @@
 
         <!-- Paginación -->
         <div class="table-footer">
-          <div class="page-info">Mostrando {{ startIndex }} a {{ endIndex }} de {{ filteredData.length }} clientes</div>
+          <div class="page-info">
+            Mostrando {{ startIndex }} a {{ endIndex }} de {{ filteredData.length }} clientes
+          </div>
           <div class="pagination-controls">
-            <button hlmBtn variant="outline" size="sm" [disabled]="currentPage === 1"
-              (click)="goToPage(currentPage - 1)">
+            <button
+              hlmBtn
+              variant="outline"
+              size="sm"
+              [disabled]="currentPage === 1"
+              (click)="goToPage(currentPage - 1)"
+            >
               <i class="fas fa-chevron-left"></i>
             </button>
             <div class="page-numbers">
-              <button *ngFor="let page of visiblePages" hlmBtn [variant]="currentPage === page ? 'default' : 'outline'"
-                size="sm" (click)="goToPage(page)">
+              <button
+                *ngFor="let page of visiblePages"
+                hlmBtn
+                [variant]="currentPage === page ? 'default' : 'outline'"
+                size="sm"
+                (click)="goToPage(page)"
+              >
                 {{ page }}
               </button>
             </div>
-            <button hlmBtn variant="outline" size="sm" [disabled]="currentPage === totalPages"
-              (click)="goToPage(currentPage + 1)">
+            <button
+              hlmBtn
+              variant="outline"
+              size="sm"
+              [disabled]="currentPage === totalPages"
+              (click)="goToPage(currentPage + 1)"
+            >
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>
@@ -278,3 +417,15 @@
     </div>
   </div>
 </div>
+
+<!-- Diálogo de confirmación para eliminar -->
+<app-confirm-dialog
+  [isOpen]="showDeleteDialog"
+  title="¿Eliminar paciente?"
+  [message]="
+    'Esta acción no se puede deshacer. ¿Estás seguro de eliminar a ' + clientToDelete?.name + '?'
+  "
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+>
+</app-confirm-dialog>

@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 // Importar Sidebar compartido
 import { Sidebar } from '../../shared/components/sidebar/sidebar';
+import { AuthService } from '../../shared/services/auth.service';
 
 // Imports de Spartan NG
 import { HlmButtonImports } from 'spartan/button';
@@ -19,20 +20,28 @@ import { HlmSeparatorImports } from 'spartan/separator';
     FormsModule,
     Sidebar,
     HlmButtonImports,
-    HlmSeparatorImports
+    HlmSeparatorImports,
   ],
   templateUrl: './main-layout.html',
-  styleUrls: ['./main-layout.scss']
+  styleUrls: ['./main-layout.scss'],
 })
 export class MainLayout {
   dropdownOpen = false;
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
   logout(): void {
-    localStorage.removeItem('isLoggedIn');
-    window.location.href = '/login';
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      },
+    });
   }
 }
