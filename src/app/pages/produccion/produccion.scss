@@ -1,0 +1,141 @@
+.produccion-container {
+  padding: 24px;
+  background: #0d1117;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  color: #e6edf3;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.tables-container {
+  display: flex;
+  gap: 24px;
+}
+
+.table-section {
+  background: #161b22;
+  border-radius: 8px;
+  padding: 20px;
+  flex: 1;
+}
+
+.table-section h2 {
+  color: #e6edf3;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.ordenes-table,
+.recetas-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ordenes-table th,
+.ordenes-table td,
+.recetas-table th,
+.recetas-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #30363d;
+  color: #e6edf3;
+}
+
+.ordenes-table th,
+.recetas-table th {
+  background: #21262d;
+  color: #8b949e;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.ordenes-table td,
+.recetas-table td {
+  font-size: 14px;
+}
+
+.ordenes-table td button {
+  margin-right: 4px;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.estado-badge.pendiente {
+  background: rgba(187, 128, 9, 0.2);
+  color: #d29922;
+}
+
+.estado-badge.en_preparacion {
+  background: rgba(56, 139, 253, 0.2);
+  color: #58a6ff;
+}
+
+.estado-badge.listo {
+  background: rgba(0, 230, 160, 0.2);
+  color: #00e6a0;
+}
+
+.estado-badge.delivery {
+  background: rgba(121, 192, 255, 0.2);
+  color: #79c0ff;
+}
+
+.detalle-section {
+  max-width: 500px;
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.detalle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-group label {
+  color: #8b949e;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.info-group span {
+  color: #e6edf3;
+  font-size: 14px;
+}
+
+.detalle-section h3 {
+  color: #e6edf3;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.acciones {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #30363d;
+}

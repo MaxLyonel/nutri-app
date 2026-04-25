@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, switchMap, throwError, tap } from 'rxjs';
 
 const AUTH_URL = 'http://localhost:4000/api/auth';
-const API_URL = 'http://localhost:4000/api/advice';
+const API_URL = 'http://localhost:4000/api';
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.startsWith(API_URL)) {

@@ -1,0 +1,80 @@
+<div class="entregas-container">
+  <div class="header">
+    <h1>Entregas</h1>
+  </div>
+
+  <div class="table-section">
+    <table class="entregas-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Paciente</th>
+          <th>Dirección</th>
+          <th>Ruta</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (paquete of paquetes; track paquete.id) {
+          <tr>
+            <td>{{ paquete.id }}</td>
+            <td>{{ paquete.paciente }}</td>
+            <td>{{ paquete.direccion }}</td>
+            <td>
+              @if (paquete.ruta) {
+                <span>Ruta #{{ paquete.ruta.id }} - {{ formatFecha(paquete.ruta.fecha) }}</span>
+              } @else {
+                <span class="no-ruta">Sin asignar</span>
+              }
+            </td>
+            <td>
+              <span class="estado-badge" [class]="paquete.estado">
+                {{ getEstadoLabel(paquete.estado) }}
+              </span>
+            </td>
+            <td>
+              <button hlmBtn variant="outline" (click)="abrirAsignarRuta(paquete)">
+                Asignar Ruta
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (showAsignarDialog) {
+    <div class="dialog-overlay" (click)="cerrarAsignarDialog()">
+      <div class="dialog" (click)="$event.stopPropagation()">
+        <h2>Asignar Ruta</h2>
+        
+        <div class="paquete-info">
+          <p><strong>Paciente:</strong> {{ paqueteSeleccionado?.paciente }}</p>
+          <p><strong>Dirección:</strong> {{ paqueteSeleccionado?.direccion }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Selecciona una Ruta</label>
+          <select [(ngModel)]="rutaSeleccionada" class="form-input">
+            <option [ngValue]="null" disabled>Selecciona una ruta</option>
+            @for (ruta of rutas; track ruta.id) {
+              <option [ngValue]="ruta">
+                Ruta #{{ ruta.id }} - {{ formatFecha(ruta.fecha) }} ({{ getEstadoLabel(ruta.estado) }})
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="dialog-actions">
+          <button hlmBtn variant="outline" (click)="cerrarAsignarDialog()">
+            Cancelar
+          </button>
+          <button hlmBtn (click)="asignarARuta()">
+            Asignar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

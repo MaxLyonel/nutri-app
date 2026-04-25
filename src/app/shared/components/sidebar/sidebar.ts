@@ -24,7 +24,7 @@ import { HlmSeparatorImports } from 'spartan/separator';
 export class Sidebar {
   @Output() viewChange = new EventEmitter<string>();
   @Output() logoutEvent = new EventEmitter<void>();
-  
+
   collapsed = false;
   activeView = 'overview'; // 👈 Agregar esta propiedad
 
@@ -44,6 +44,9 @@ export class Sidebar {
   }
 
   logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     this.logoutEvent.emit();
   }
 }

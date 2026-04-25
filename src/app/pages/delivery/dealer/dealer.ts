@@ -14,7 +14,6 @@ import { HlmButtonImports } from 'spartan/button';
   imports: [
     CommonModule,
     FormsModule,
-    Sidebar,
     HlmButtonImports,
   ],
   templateUrl: './dealer.html',

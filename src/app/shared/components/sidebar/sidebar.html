@@ -111,8 +111,8 @@
       <div class="nav-section" *ngIf="!collapsed">Producción</div>
 
       <div hlm-sidebar-item class="nav-link">
-        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'payments')">
-          <i class="fas fa-credit-card"></i>
+        <a routerLink="/produccion" routerLinkActive="active" class="nav-link-content">
+          <i class="fas fa-boxes"></i>
           <span *ngIf="!collapsed">Órdenes de Producción</span>
         </a>
       </div>
@@ -127,21 +127,21 @@
       </div>
 
       <div hlm-sidebar-item class="nav-link">
-        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'deliveries')">
+        <a routerLink="/delivery/entregas" routerLinkActive="active" class="nav-link-content">
           <i class="fas fa-box"></i>
           <span *ngIf="!collapsed">Entregas</span>
         </a>
       </div>
 
       <div hlm-sidebar-item class="nav-link">
-        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'routes')">
+        <a routerLink="/delivery/route" routerLinkActive="active" class="nav-link-content">
           <i class="fas fa-route"></i>
           <span *ngIf="!collapsed">Rutas</span>
         </a>
       </div>
 
       <div hlm-sidebar-item class="nav-link">
-        <a href="#" class="nav-link-content" (click)="onNavClick($event, 'delivery-detail')">
+        <a routerLink="/delivery/delivery-detail" routerLinkActive="active" class="nav-link-content">
           <i class="fas fa-map-marker-alt"></i>
           <span *ngIf="!collapsed">Detalle de Entrega</span>
         </a>
@@ -167,10 +167,10 @@
 
     <!-- Footer con logout -->
     <div hlm-sidebar-footer class="sidebar-footer">
-      <button hlmBtn variant="destructive" class="logout-btn" (click)="logout()">
+       <!--<button hlmBtn variant="destructive" class="logout-btn" (click)="logout()">
         <i class="fas fa-sign-out-alt"></i>
         <span *ngIf="!collapsed">Cerrar Sesión</span>
-      </button>
+      </button>-->
     </div>
   </div>
 </div>

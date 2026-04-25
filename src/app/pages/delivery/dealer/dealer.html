@@ -1,52 +1,8 @@
 <div class="dealer-page">
-  <app-sidebar (viewChange)="onViewChange($event)" (logoutEvent)="logout()"></app-sidebar>
+
 
   <main class="main">
-    <div class="top-nav">
-      <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar...">
-        <i class="fas fa-sliders-h"></i>
-      </div>
-      <div class="top-actions">
-        <div class="notification-btn">
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge">3</span>
-        </div>
-        <div class="user-menu-top" (click)="toggleDropdown()">
-          <div class="user-avatar-small">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
-          </div>
-          <div class="user-info-top">
-            <div class="name">Administrador</div>
-            <div class="role">Super Admin</div>
-          </div>
-          <i class="fas fa-chevron-down" [class.rotated]="dropdownOpen"></i>
-        </div>
-      </div>
-    </div>
 
-    <div class="dropdown-menu" [class.open]="dropdownOpen">
-      <div class="dropdown-header">
-        <div class="user-avatar-small">
-          <img src="https://ui-avatars.com/api/?name=Admin&background=00E6A0&color=0A0C10&bold=true" alt="Avatar">
-        </div>
-        <div>
-          <div style="font-weight: 600;">Administrador</div>
-          <div style="font-size: 0.75rem; color: #9aaec7;">admin@nutre.com</div>
-        </div>
-      </div>
-      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
-        <i class="fas fa-user"></i> Mi Perfil
-      </a>
-      <a href="#" class="dropdown-item" (click)="$event.preventDefault()">
-        <i class="fas fa-cog"></i> Configuración
-      </a>
-      <div class="dropdown-divider"></div>
-      <a href="#" class="dropdown-item logout-item" (click)="logout()">
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-      </a>
-    </div>
 
     <div class="content">
       <div class="view-header">

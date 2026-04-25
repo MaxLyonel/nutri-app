@@ -1,0 +1,107 @@
+<div class="produccion-container">
+  <div class="header">
+    <h1>Órdenes de Producción</h1>
+  </div>
+
+  <div class="tables-container">
+    <div class="table-section">
+      <h2>Órdenes</h2>
+      <table class="ordenes-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Cambiar Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (orden of ordenes; track orden.id) {
+            <tr>
+              <td>{{ orden.id }}</td>
+              <td>{{ formatFecha(orden.fecha) }}</td>
+              <td>
+                <span class="estado-badge" [class]="orden.estado">
+                  {{ getEstadoLabel(orden.estado) }}
+                </span>
+              </td>
+              <td>
+                @if (orden.estado === 'pendiente') {
+                  <button hlmBtn variant="outline" size="sm" (click)="cambiarEstado(orden, 'en_preparacion')">
+                    Iniciar
+                  </button>
+                }
+                @if (orden.estado === 'en_preparacion') {
+                  <button hlmBtn size="sm" (click)="cambiarEstado(orden, 'listo')">
+                    Listo
+                  </button>
+                }
+                @if (orden.estado === 'listo') {
+                  <button hlmBtn variant="secondary" size="sm" (click)="cambiarEstado(orden, 'delivery')">
+                    Delivery
+                  </button>
+                }
+              </td>
+              <td>
+                <button hlmBtn (click)="visualizarOrden(orden)">
+                  Visualizar
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (ordenSeleccionada) {
+      <div class="table-section detalle-section">
+        <div class="detalle-header">
+          <h2>Detalle de Orden #{{ ordenSeleccionada.id }}</h2>
+          <button hlmBtn variant="outline" (click)="cerrarDetalle()">
+            Cerrar
+          </button>
+        </div>
+
+        <div class="detalle-info">
+          <div class="info-group">
+            <label>Paciente:</label>
+            <span>{{ ordenSeleccionada.paciente?.nombre }}</span>
+          </div>
+          <div class="info-group">
+            <label>Estado del Paciente:</label>
+            <span>{{ ordenSeleccionada.paciente?.estado }}</span>
+          </div>
+          <div class="info-group">
+            <label>Estado de la Orden:</label>
+            <span class="estado-badge" [class]="ordenSeleccionada.estado">
+              {{ getEstadoLabel(ordenSeleccionada.estado) }}
+            </span>
+          </div>
+        </div>
+
+        <h3>Recetas</h3>
+        <table class="recetas-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (receta of ordenSeleccionada.recetas; track receta.id) {
+              <tr>
+                <td>{{ receta.id }}</td>
+                <td>{{ receta.nombre }}</td>
+                <td>{{ receta.tipo }}</td>
+                <td>{{ receta.cantidad }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

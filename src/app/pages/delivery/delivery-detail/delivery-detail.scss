@@ -1,0 +1,77 @@
+.delivery-detail-container {
+  padding: 24px;
+  background: #0d1117;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  color: #e6edf3;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.table-section {
+  background: #161b22;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.detail-table th,
+.detail-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #30363d;
+  color: #e6edf3;
+}
+
+.detail-table th {
+  background: #21262d;
+  color: #8b949e;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.detail-table td {
+  font-size: 14px;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.estado-badge.entregado {
+  background: rgba(0, 230, 160, 0.2);
+  color: #00e6a0;
+}
+
+.estado-badge.no_entregado {
+  background: rgba(187, 128, 9, 0.2);
+  color: #d29922;
+}
+
+.estado-badge.cancelado {
+  background: rgba(248, 81, 73, 0.2);
+  color: #f85149;
+}
+
+.detail-table td button {
+  margin-right: 8px;
+}
+
+.estado-fijo {
+  color: #8b949e;
+  font-size: 12px;
+}

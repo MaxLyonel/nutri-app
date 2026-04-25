@@ -35,8 +35,12 @@ export class MainLayout {
   }
 
   logout(): void {
+
     this.authService.logout().subscribe({
       next: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         this.router.navigate(['/login']);
       },
       error: () => {

@@ -1,0 +1,49 @@
+<div class="delivery-detail-container">
+  <div class="header">
+    <h1>Detalle de Entrega</h1>
+  </div>
+
+  <div class="table-section">
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Dirección</th>
+          <th>Estado</th>
+          <th>Ruta</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (paquete of paquetesFiltrados; track paquete.id) {
+          <tr>
+            <td>{{ paquete.paciente }}</td>
+            <td>{{ paquete.direccion }}</td>
+            <td>
+              <span class="estado-badge" [class]="paquete.estado">
+                {{ getEstadoLabel(paquete.estado) }}
+              </span>
+            </td>
+            <td>
+              @if (paquete.ruta) {
+                <span>Ruta #{{ paquete.ruta.id }} - {{ formatFecha(paquete.ruta.fecha) }}</span>
+              }
+            </td>
+            <td>
+              @if (paquete.estado === 'no_entregado') {
+                <button hlmBtn variant="outline" size="sm" (click)="cambiarEstado(paquete, 'entregado')">
+                  Entregado
+                </button>
+                <button hlmBtn variant="destructive" size="sm" (click)="cambiarEstado(paquete, 'cancelado')">
+                  Cancelar
+                </button>
+              } @else {
+                <span class="estado-fijo">{{ getEstadoLabel(paquete.estado) }}</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
